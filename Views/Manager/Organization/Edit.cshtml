@@ -1,0 +1,227 @@
+﻿@model VolunteerHub.Models.ViewModels.ManagerOrganizationEditViewModel
+@{
+    ViewData["Title"] = "Edit Organization";
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+
+    <div class="text-center mb-5">
+        <h1>Edit Organization</h1>
+        <p class="lead">
+            Update your organization information
+        </p>
+        <p>
+            Manager:
+            <strong>
+                @Model.ManagerFirstName @Model.ManagerLastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- EDIT FORM -->
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header table-primary text-center">
+                    <h3 class="mb-0">
+                        Organization Information
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="ManagerOrganization"
+                          asp-action="Edit"
+                          method="post">
+                        @Html.AntiForgeryToken()
+                        <!-- VALIDATION -->
+                        <div asp-validation-summary="All"
+                             class="text-danger mb-4">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Organization ID
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="@Model.Oid"
+                                   readonly />
+                            <small class="text-muted">
+                                Organization ID cannot be changed.
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="OrgName"
+                                   class="form-label">
+                                Organization Name
+                            </label>
+                            <input asp-for="OrgName"
+                                   class="form-control"
+                                   placeholder="Enter organization name" />
+                            <span asp-validation-for="OrgName"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Description"
+                                   class="form-label">
+                                Description
+                            </label>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="Enter organization description"></textarea>
+                            <span asp-validation-for="Description"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Email"
+                                   class="form-label">
+                                Email
+                            </label>
+                            <input asp-for="Email"
+                                   type="email"
+                                   class="form-control"
+                                   placeholder="Enter organization email" />
+                            <span asp-validation-for="Email"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Phone"
+                                   class="form-label">
+                                Phone
+                            </label>
+                            <input asp-for="Phone"
+                                   class="form-control"
+                                   placeholder="Enter organization phone" />
+                            <span asp-validation-for="Phone"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <hr />
+
+                        <!-- ADDRESS -->
+
+                        <h4 class="mb-4">
+                            Organization Address
+                        </h4>
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Address ID
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="@Model.AddressId"
+                                   readonly />
+                            <small class="text-muted">
+                                Address ID cannot be changed.
+                            </small>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="StreetAddress"
+                                   class="form-label">
+                                Street Address
+                            </label>
+                            <input asp-for="StreetAddress"
+                                   class="form-control"
+                                   placeholder="Enter street address" />
+                            <span asp-validation-for="StreetAddress"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Suburb"
+                                   class="form-label">
+                                Suburb
+                            </label>
+                            <input asp-for="Suburb"
+                                   class="form-control"
+                                   placeholder="Enter suburb" />
+                            <span asp-validation-for="Suburb"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="City"
+                                   class="form-label">
+                                City
+                            </label>
+                            <input asp-for="City"
+                                   class="form-control"
+                                   placeholder="Enter city" />
+                            <span asp-validation-for="City"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Province"
+                                   class="form-label">
+                                Province
+                            </label>
+                            <input asp-for="Province"
+                                   class="form-control"
+                                   placeholder="Enter province" />
+                            <span asp-validation-for="Province"
+                                  class="text-danger">
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="PostalCode"
+                                   class="form-label">
+                                Postal Code
+                            </label>
+                            <input asp-for="PostalCode"
+                                   class="form-control"
+                                   placeholder="Enter postal code" />
+                            <span asp-validation-for="PostalCode"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <hr />
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Manager ID
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="@Model.Mid"
+                                   readonly />
+                            <small class="text-muted">
+                                Manager ID cannot be changed.
+                            </small>
+                        </div>
+
+                        <!--buttons-->
+                        <div class="text-center mt-4">
+                            <button type="submit"
+                                    class="btn btn-success me-2">
+                                Save Changes
+                            </button>
+                            <a asp-controller="ManagerOrganization"
+                               asp-action="Index"
+                               class="btn btn-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewData["Title"] = "Create Project";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER: -->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    Create New Project
+                </h1>
+                <p class="mb-2">
+                    Create a new project for your organization.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT FORM. -->
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <span class="fw-semibold">
+                        Project Information
+                    </span>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Send information to the server -->
+                    <form asp-controller="ManagerProjects"
+                          asp-action="Create"
+                          method="post">
+
+                        <!-- protect against forged requests -->
+                        @Html.AntiForgeryToken()
+
+                        <!-- validate errors incase manager submits invalid data -->
+                        <div asp-validation-summary="All"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="projectName"
+                                   class="form-label">
+                                Project Name
+                            </label>
+
+                            <input type="text"
+                                   id="projectName"
+                                   name="projectName"
+                                   class="form-control"
+                                   placeholder="Enter project name"
+                                   maxlength="150"
+                                   required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description"
+                                   class="form-label">
+                                Description
+                            </label>
+                            <textarea id="description"
+                                      name="description"
+                                      class="form-control"
+                                      rows="5"
+                                      maxlength="500"
+                                      placeholder="Enter project description"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="location"
+                                   class="form-label">
+                                Project Location
+                            </label>
+                            <input type="text"
+                                   id="location"
+                                   name="location"
+                                   class="form-control"
+                                   maxlength="200"
+                                   placeholder="Enter project location"
+                                   required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="startDate"
+                                   class="form-label">
+                                Start Date
+                            </label>
+                            <input type="date"
+                                   id="startDate"
+                                   name="startDate"
+                                   class="form-control"
+                                   required />
+                        </div>
+                        <div class="mb-4">
+                            <label for="endDate"
+                                   class="form-label">
+                                End Date
+                            </label>
+                            <input type="date"
+                                   id="endDate"
+                                   name="endDate"
+                                   class="form-control" />
+
+                            <small class="text-muted">
+                                Leave blank if the project does not have
+                                an end date yet.
+                            </small>
+                        </div>
+
+                        <input type="hidden"
+                               name="status"
+                               value="PLANNING" />
+
+                        <input type="hidden"
+                               name="mid"
+                               value="@ViewBag.Mid" />
+
+                        <div class="text-center mt-4">
+
+                            <button type="submit"
+                                    class="btn btn-primary me-2">
+                                Create Project
+                            </button>
+                            <a asp-controller="ManagerProjects"
+                               asp-action="Index"
+                               class="btn btn-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-4">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</div>

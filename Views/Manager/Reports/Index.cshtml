@@ -1,0 +1,307 @@
+﻿@model List<VolunteerHub.Models.Report>
+@{
+    ViewData["Title"] = "Volunteer Reports";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Reporting
+                </div>
+                <h1 class="mb-2">
+                    Volunteer Reports
+                </h1>
+                <p class="mb-2">
+                    Reports generated for volunteers in your organization.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="text-white">
+                    <div class="small opacity-75">
+                        Total Reports
+                    </div>
+                    <div class="display-6 fw-bold">
+                        @Model.Count
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MESSAGES -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <strong>Success:</strong>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Attention:</strong>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- SEARCH -->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-controller="ManagerReport"
+                  asp-action="Index"
+                  method="get">
+                <div class="row g-3">
+                    <div class="col-md-9">
+                        <label class="form-label">
+                            Search Reports
+                        </label>
+                        <input type="text"
+                               name="search"
+                               value="@ViewBag.Search"
+                               class="form-control"
+                               placeholder="Search by report ID, volunteer, project or status..." />
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Search Reports
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- REPORT TABLE -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        Organization Reports
+                    </span>
+                    <span class="badge bg-light text-dark">
+                        @Model.Count Report(s)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Report ID
+                                </th>
+                                <th>
+                                    Volunteer
+                                </th>
+                                <th>
+                                    Project
+                                </th>
+                                <th>
+                                    Project Status
+                                </th>
+                                <th>
+                                    Total Hours
+                                </th>
+                                <th>
+                                    Report Status
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                                <th>
+                                    Certificate
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var report in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">
+                                            @report.ReportId
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @report.VidNavigation?.PidNavigation?.FirstName
+                                            @report.VidNavigation?.PidNavigation?.LastName
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @report.Project?.ProjectName
+                                    </td>
+                                    <td>
+                                        @if (report.Project?.Status == "COMPLETED")
+                                        {
+                                            <span class="badge bg-success">
+                                                COMPLETED
+                                            </span>
+                                        }
+                                        else if (report.Project?.Status == "ACTIVE")
+                                        {
+                                            <span class="badge bg-primary">
+                                                ACTIVE
+                                            </span>
+                                        }
+                                        else if (report.Project?.Status == "PLANNING")
+                                        {
+                                            <span class="badge bg-secondary">
+                                                PLANNING
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @report.Project?.Status
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @report.TotalHours?.ToString("0.00")
+                                        </strong>
+                                        <span class="text-muted">
+                                            hrs
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (report.Status == "GENERATED")
+                                        {
+                                            <span class="badge bg-success">
+                                                GENERATED
+                                            </span>
+                                        }
+                                        else if (report.Status == "PENDING")
+                                        {
+                                            <span class="badge bg-secondary">
+                                                PENDING
+                                            </span>
+                                        }
+                                        else if (report.Status == "REJECTED")
+                                        {
+                                            <span class="badge bg-danger">
+                                                REJECTED
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @report.Status
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="ManagerReport"
+                                           asp-action="Details"
+                                           asp-route-id="@report.ReportId"
+                                           class="btn btn-sm btn-primary">
+                                            View Report
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @if (report.Certificates != null &&
+                                             report.Certificates.Any())
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-secondary"
+                                                    disabled>
+                                                Certificate Issued
+                                            </button>
+                                            @if (report.Certificates.First().IssuedDate.HasValue)
+                                            {
+                                                <div class="small text-muted mt-1">
+                                                    Issued:
+                                                    @(report.Certificates.FirstOrDefault()?.IssuedDate?.ToString("dd MMM yyyy") ?? "Date not available")
+                                                </div>
+                                            }
+                                        }
+                                        else if (report.Status == "GENERATED"
+                                                 && report.Project?.Status == "COMPLETED")
+                                        {
+                                            <form asp-controller="ManagerCertificates"
+                                                  asp-action="Generate"
+                                                  method="post"
+                                                  class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden"
+                                                       name="reportId"
+                                                       value="@report.ReportId" />
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-success"
+                                                        onclick="return confirm('Issue a certificate for this volunteer?');">
+                                                    Issue Certificate
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (report.Project?.Status == "ACTIVE")
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Project Active
+                                            </span>
+                                            <div class="small text-muted mt-1">
+                                                Certificate unavailable
+                                            </div>
+                                        }
+                                        else if (report.Project?.Status == "PLANNING")
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Project Planning
+                                            </span>
+                                            <div class="small text-muted mt-1">
+                                                Certificate unavailable
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not available
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="vh-empty-state">
+            <h3>
+                No Reports Found
+            </h3>
+            <p class="text-muted">
+                There are currently no volunteer reports
+                available for your organization.
+            </p>
+        </div>
+    }
+    <!-- BACK -->
+
+    <div class="text-center mt-4">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>

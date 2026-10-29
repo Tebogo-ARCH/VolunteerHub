@@ -1,0 +1,475 @@
+/* =========================================================
+   VOLUNTEERHUB PROFESSIONAL THEME
+   ========================================================= */
+
+:root {
+    /* VolunteerHub Brand Colours */
+
+    --vh-primary: #2F5DA8;
+    --vh-secondary: #8FAADC;
+    --vh-third: #FFF1E8;
+    --vh-fourth: #0C1F3F;
+    /* Supporting colours */
+
+    --vh-white: #FFFFFF;
+    --vh-light: #F7F9FC;
+    --vh-muted: #667085;
+    --vh-border: #D9E2F2;
+    /* Shadows */
+
+    --vh-shadow: 0 8px 24px rgba(12, 31, 63, 0.08);
+    --vh-shadow-hover: 0 14px 30px rgba(12, 31, 63, 0.14);
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+html {
+    font-size: 14px;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient( 135deg, var(--vh-third) 0%, #ffffff 45%, var(--vh-secondary) 180% );
+    color: var(--vh-fourth);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+
+/* =========================================================
+   MAIN APPLICATION
+   ========================================================= */
+
+.vh-app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.vh-main {
+    flex: 1;
+    padding-bottom: 40px;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.vh-navbar {
+    background: linear-gradient( 135deg, var(--vh-fourth), var(--vh-primary) );
+    min-height: 70px;
+    box-shadow: 0 4px 18px rgba(12, 31, 63, 0.18);
+    border: none !important;
+}
+
+
+.vh-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--vh-white) !important;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+
+    .vh-brand:hover {
+        color: var(--vh-third) !important;
+    }
+
+
+.vh-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--vh-secondary);
+    color: var(--vh-fourth);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+
+.vh-nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 10px 16px !important;
+    border-radius: 8px;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+}
+
+
+    .vh-nav-link:hover {
+        color: var(--vh-fourth) !important;
+        background: var(--vh-secondary);
+    }
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.vh-footer {
+    background: var(--vh-fourth);
+    color: var(--vh-white);
+    padding: 28px 0;
+    margin-top: auto;
+}
+
+
+.vh-footer-brand {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+
+.vh-footer-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+
+.vh-footer a {
+    color: var(--vh-secondary);
+    text-decoration: none;
+}
+
+
+    .vh-footer a:hover {
+        color: var(--vh-third);
+        text-decoration: underline;
+    }
+
+
+/* =========================================================
+   PROFESSIONAL CARDS
+   ========================================================= */
+
+.card {
+    border: 1px solid var(--vh-border);
+    border-radius: 16px;
+    background: var(--vh-white);
+    box-shadow: var(--vh-shadow);
+    overflow: hidden;
+}
+
+
+    .card:hover {
+        box-shadow: var(--vh-shadow-hover);
+    }
+
+
+.card-header {
+    background: var(--vh-primary);
+    color: var(--vh-white);
+    border-bottom: none;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--vh-fourth);
+    font-weight: 700;
+}
+
+
+.lead {
+    color: var(--vh-muted);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.btn-primary {
+    background-color: var(--vh-primary) !important;
+    border-color: var(--vh-primary) !important;
+    color: var(--vh-white) !important;
+    font-weight: 600;
+    border-radius: 9px;
+    padding: 9px 18px;
+}
+
+
+    .btn-primary:hover {
+        background-color: var(--vh-fourth) !important;
+        border-color: var(--vh-fourth) !important;
+    }
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
+
+.btn-secondary {
+    background-color: var(--vh-secondary) !important;
+    border-color: var(--vh-secondary) !important;
+    color: var(--vh-fourth) !important;
+    font-weight: 600;
+    border-radius: 9px;
+}
+
+
+    .btn-secondary:hover {
+        background-color: var(--vh-fourth) !important;
+        border-color: var(--vh-fourth) !important;
+        color: var(--vh-white) !important;
+    }
+
+
+/* =========================================================
+   OUTLINE PRIMARY
+   ========================================================= */
+
+.btn-outline-primary {
+    color: var(--vh-primary) !important;
+    border-color: var(--vh-primary) !important;
+    font-weight: 600;
+    border-radius: 9px;
+}
+
+
+    .btn-outline-primary:hover {
+        background-color: var(--vh-primary) !important;
+        color: var(--vh-white) !important;
+    }
+
+
+/* =========================================================
+   SUCCESS BUTTON
+   ========================================================= */
+
+.btn-success {
+    background-color: var(--vh-primary) !important;
+    border-color: var(--vh-primary) !important;
+    color: var(--vh-white) !important;
+    font-weight: 600;
+}
+
+
+    .btn-success:hover {
+        background-color: var(--vh-fourth) !important;
+        border-color: var(--vh-fourth) !important;
+    }
+
+
+/* =========================================================
+   DANGER BUTTON
+   ========================================================= */
+
+.btn-danger {
+    font-weight: 600;
+    border-radius: 9px;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.table {
+    margin-bottom: 0;
+}
+
+
+    .table thead th {
+        background-color: var(--vh-primary);
+        color: var(--vh-white);
+        border-color: var(--vh-primary);
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+
+    .table tbody td {
+        vertical-align: middle;
+    }
+
+
+.table-hover tbody tr:hover {
+    background-color: var(--vh-third);
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge.bg-primary {
+    background-color: var(--vh-primary) !important;
+}
+
+
+.badge.bg-secondary {
+    background-color: var(--vh-secondary) !important;
+    color: var(--vh-fourth) !important;
+}
+
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+.form-control,
+.form-select {
+    border: 1px solid var(--vh-border);
+    border-radius: 9px;
+    padding: 10px 12px;
+}
+
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--vh-primary);
+        box-shadow: 0 0 0 0.2rem rgba(47, 93, 168, 0.15);
+    }
+
+
+/* =========================================================
+   DASHBOARD HERO
+   ========================================================= */
+
+.vh-dashboard-header {
+    background: linear-gradient( 135deg, var(--vh-fourth), var(--vh-primary) );
+    color: var(--vh-white);
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: var(--vh-shadow);
+}
+
+
+    .vh-dashboard-header h1,
+    .vh-dashboard-header h2,
+    .vh-dashboard-header h3 {
+        color: var(--vh-white);
+    }
+
+
+    .vh-dashboard-header p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+
+/* =========================================================
+   ORGANIZATION PANEL
+   ========================================================= */
+
+.vh-organization {
+    background: linear-gradient( 135deg, var(--vh-third), var(--vh-white) );
+    border-left: 6px solid var(--vh-primary);
+}
+
+
+/* =========================================================
+   DASHBOARD CARDS
+   ========================================================= */
+
+.vh-dashboard-card {
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .vh-dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--vh-shadow-hover);
+    }
+
+
+    .vh-dashboard-card .card-body {
+        padding: 28px;
+    }
+
+
+.vh-dashboard-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--vh-fourth);
+}
+
+
+.vh-dashboard-number {
+    color: var(--vh-primary);
+    font-size: 2.3rem;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.vh-empty-state {
+    background: var(--vh-third);
+    border: 1px dashed var(--vh-secondary);
+    border-radius: 16px;
+    padding: 50px 25px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.vh-page-header {
+    margin-bottom: 30px;
+}
+
+
+    .vh-page-header h1 {
+        color: var(--vh-fourth);
+        font-weight: 800;
+    }
+
+
+    .vh-page-header p {
+        color: var(--vh-muted);
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .vh-navbar {
+        min-height: 62px;
+    }
+
+    .vh-dashboard-header {
+        padding: 22px;
+    }
+
+    .vh-brand {
+        font-size: 1.1rem;
+    }
+}

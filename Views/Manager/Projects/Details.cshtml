@@ -1,0 +1,278 @@
+﻿@model VolunteerHub.Models.Project
+
+@{
+    ViewData["Title"] = "Project Details";
+
+    int requestedVolunteers = ViewBag.RequestedVolunteersCount ?? 0;
+    int acceptedVolunteers = ViewBag.AcceptedVolunteersCount ?? 0;
+
+    string projectStatus = Model.Status?.ToUpperInvariant() ?? "";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+
+                <h1 class="mb-2">Project Details</h1>
+
+                <p class="mb-2">
+                    Project information, volunteer participation and management.
+                </p>
+
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT DETAILS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span class="fw-semibold">
+                    @Model.ProjectName
+                </span>
+
+                <span class="badge bg-light text-dark">
+                    Project ID: @Model.ProjectId
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <h4 class="mb-3">Project Information</h4>
+
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <strong>Description</strong>
+                    <div class="mt-1">
+                        @Model.Description
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <strong>Project Location</strong>
+                    <div class="mt-1">
+                        @if (!string.IsNullOrWhiteSpace(Model.Location))
+                        {
+                            @Model.Location
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not specified</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- PROJECT DATES -->
+            <h4 class="mb-3">Project Dates</h4>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>Start Date</strong>
+                    <div class="mt-1">
+                        @Model.StartDate.ToString("dd MMMM yyyy")
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <strong>End Date</strong>
+                    <div class="mt-1">
+                        @if (Model.EndDate.HasValue)
+                        {
+                            @Model.EndDate.Value.ToString("dd MMMM yyyy")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not specified</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- PROJECT STATUS -->
+            <h4 class="mb-3">Project Status</h4>
+
+            <div class="mb-3">
+                @if (projectStatus == "ACTIVE")
+                {
+                    <span class="badge bg-success fs-6">ACTIVE</span>
+                }
+                else if (projectStatus == "PLANNING")
+                {
+                    <span class="badge bg-primary fs-6">PLANNING</span>
+                }
+                else if (projectStatus == "CANCELLED")
+                {
+                    <span class="badge bg-danger fs-6">CANCELLED</span>
+                }
+                else if (projectStatus == "COMPLETED")
+                {
+                    <span class="badge bg-secondary fs-6">COMPLETED</span>
+                }
+                else
+                {
+                    <span class="badge bg-light text-dark">
+                        @(string.IsNullOrWhiteSpace(Model.Status)
+                            ? "Not specified"
+                            : Model.Status)
+                    </span>
+                }
+            </div>
+
+            <hr />
+
+            <!-- VOLUNTEER PARTICIPATION SUMMARY -->
+            <h4 class="mb-2">Volunteer Participation Summary</h4>
+
+            <p class="text-muted mb-4">
+                Overview of volunteer applications for this project.
+            </p>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6">
+                    <div class="card h-100 border-warning">
+                        <div class="card-body text-center py-4">
+                            <div class="mb-2 text-warning">
+                                <strong>Pending Requests</strong>
+                            </div>
+
+                            <h2 class="fw-bold mb-2">
+                                @requestedVolunteers
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Volunteers waiting for a decision
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100 border-success">
+                        <div class="card-body text-center py-4">
+                            <div class="mb-2 text-success">
+                                <strong>Accepted Volunteers</strong>
+                            </div>
+
+                            <h2 class="fw-bold mb-2">
+                                @acceptedVolunteers
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Volunteers approved for this project
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <!-- PROJECT MANAGEMENT ACTIONS -->
+            <h4 class="mb-2">Project Management</h4>
+
+            <p class="text-muted mb-3">
+                Manage the current status of this project.
+            </p>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["Success"]
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+
+                @if (projectStatus == "PLANNING")
+                {
+                    <form asp-controller="ManagerProjects"
+                          asp-action="Activate"
+                          asp-route-id="@Model.ProjectId"
+                          method="post">
+
+                        <button type="submit"
+                                class="btn btn-success"
+                                onclick="return confirm('Are you sure you want to activate this project?');">
+                            Activate Project
+                        </button>
+                    </form>
+                }
+
+                @if (projectStatus == "PLANNING" || projectStatus == "ACTIVE")
+                {
+                    <form asp-controller="ManagerProjects"
+                          asp-action="Cancel"
+                          asp-route-id="@Model.ProjectId"
+                          method="post">
+
+                        <button type="submit"
+                                class="btn btn-outline-danger"
+                                onclick="return confirm('Are you sure you want to cancel this project?');">
+                            Cancel Project
+                        </button>
+                    </form>
+                }
+
+                @if (projectStatus == "COMPLETED")
+                {
+                    <span class="text-muted">
+                        This project has been completed and cannot be activated or cancelled here.
+                    </span>
+                }
+
+                @if (projectStatus == "CANCELLED")
+                {
+                    <span class="text-danger">
+                        This project has been cancelled.
+                    </span>
+                }
+
+            </div>
+
+            <!-- NAVIGATION BUTTONS -->
+            <div class="text-center mt-4">
+                <a asp-controller="ManagerProjects"
+                   asp-action="Index"
+                   class="btn btn-secondary me-2">
+                    Back to Projects
+                </a>
+
+                <a asp-controller="Manager"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Back to Dashboard
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

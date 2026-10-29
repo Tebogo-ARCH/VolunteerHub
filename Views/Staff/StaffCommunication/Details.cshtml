@@ -1,0 +1,75 @@
+﻿
+@model VolunteerHub.Models.Announcement
+
+@{
+    ViewData["Title"] = "Announcement Details";
+
+    var controllerName =
+        ViewContext.RouteData.Values["controller"]?.ToString()
+        ?? "";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="p-4">
+            <div class="small text-uppercase fw-semibold mb-2"
+                 style="letter-spacing: 1px; color: #8FAADC;">
+                VolunteerHub
+            </div>
+
+            <h1 class="mb-2">Announcement Details</h1>
+
+            <p class="mb-0">
+                Read the full communication from your organization.
+            </p>
+        </div>
+    </div>
+
+    <div class="card vh-dashboard-card">
+        <div class="card-body p-4">
+
+            <span class="badge bg-secondary mb-3">
+                COMMUNICATION
+            </span>
+
+            <h2 class="mb-3">@Model.Title</h2>
+
+            <div class="mb-4">
+                <p class="text-muted mb-1">
+                    Organization
+                </p>
+
+                <h6>@ViewBag.OrganizationName</h6>
+            </div>
+
+            <div class="mb-4">
+                <p class="text-muted mb-1">
+                    Published
+                </p>
+
+                <p>
+                    @(Model.CreatedAt?.ToString("dd MMMM yyyy, HH:mm")
+                        ?? "Date unavailable")
+                </p>
+            </div>
+
+            <hr />
+
+            <div class="mt-4">
+                <h5 class="mb-3">Message</h5>
+
+                <div style="white-space: pre-wrap; overflow-wrap: anywhere;">@Model.Content</div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-controller="@controllerName"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Back to Communications
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

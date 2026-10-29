@@ -1,0 +1,605 @@
+﻿
+@{
+    ViewData["Title"] = "VolunteerHub";
+}
+
+<style>
+    /* =========================================================
+       VOLUNTEERHUB COLOR PALETTE
+       ========================================================= */
+
+    :root {
+        --vh-cream: #FFF1E8;
+        --vh-light-blue: #8FAADC;
+        --vh-blue: #2F5DA8;
+        --vh-navy: #0C1F3F;
+    }
+
+    /* =========================================================
+       PAGE RESET
+       ========================================================= */
+
+    html,
+    body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--vh-navy);
+    }
+
+    body {
+        min-height: 100vh;
+    }
+
+    /* =========================================================
+       FULL SCREEN HERO
+       ========================================================= */
+
+    .vh-hero {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: linear-gradient(
+            135deg,
+            var(--vh-navy) 0%,
+            var(--vh-blue) 65%,
+            var(--vh-light-blue) 100%
+        );
+        color: white;
+        z-index: 9999;
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+       BACKGROUND DECORATION
+       ========================================================= */
+
+    .vh-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .vh-circle-one {
+        width: 520px;
+        height: 520px;
+        top: -250px;
+        left: -180px;
+        background: rgba(255, 241, 232, 0.08);
+    }
+
+    .vh-circle-two {
+        width: 500px;
+        height: 500px;
+        bottom: -250px;
+        right: -180px;
+        background: rgba(255, 241, 232, 0.08);
+    }
+
+    .vh-circle-three {
+        width: 200px;
+        height: 200px;
+        top: 12%;
+        right: 10%;
+        background: rgba(143, 170, 220, 0.18);
+    }
+
+    .vh-circle-four {
+        width: 120px;
+        height: 120px;
+        bottom: 18%;
+        left: 10%;
+        background: rgba(255, 241, 232, 0.07);
+    }
+
+    /* =========================================================
+       MAIN CONTENT
+       ========================================================= */
+
+    .vh-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 1150px;
+        margin: auto;
+        padding: 30px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+       LOGO
+       The logo is created entirely with CSS.
+       ========================================================= */
+
+    .vh-logo {
+        position: relative;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 18px;
+        padding: 0;
+        border-radius: 50%;
+        background: var(--vh-cream);
+        border: 5px solid var(--vh-light-blue);
+        box-shadow: 0 15px 35px rgba(12, 31, 63, 0.45);
+        box-sizing: border-box;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .vh-logo::before {
+        content: "";
+        display: block;
+        width: 38px;
+        height: 38px;
+        border: 5px solid var(--vh-blue);
+        border-radius: 50%;
+        box-sizing: border-box;
+    }
+
+    .vh-logo::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 48px;
+        height: 5px;
+        background: var(--vh-blue);
+        border-radius: 10px;
+        transform: rotate(45deg);
+    }
+
+    /* =========================================================
+       BRAND NAME
+       FIX: Centered normally without left: 50% or translation.
+       ========================================================= */
+
+    .vh-brand {
+        display: block;
+        width: 100%;
+        margin: 0 auto 8px;
+        padding: 0;
+        position: static;
+        transform: none;
+        text-align: center;
+        font-size: clamp(38px, 5vw, 64px);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: var(--vh-cream);
+        overflow-wrap: anywhere;
+    }
+
+    /* =========================================================
+       TAGLINE
+       ========================================================= */
+
+    .vh-tagline {
+        margin: 0 0 16px;
+        font-size: clamp(19px, 2vw, 27px);
+        font-weight: 600;
+        line-height: 1.4;
+        color: white;
+    }
+
+    /* =========================================================
+       DESCRIPTION
+       ========================================================= */
+
+    .vh-description {
+        max-width: 720px;
+        margin: 0 auto 24px;
+        font-size: clamp(14px, 1.4vw, 18px);
+        line-height: 1.6;
+        color: rgba(255, 241, 232, 0.95);
+    }
+
+    /* =========================================================
+       LOGIN BUTTON
+       ========================================================= */
+
+    .vh-login-btn {
+        display: inline-block;
+        padding: 15px 40px;
+        border-radius: 8px;
+        background: var(--vh-cream);
+        color: var(--vh-navy);
+        border: 2px solid var(--vh-cream);
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .vh-login-btn:hover {
+        background: var(--vh-light-blue);
+        border-color: var(--vh-light-blue);
+        color: var(--vh-navy);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(12, 31, 63, 0.45);
+    }
+
+    /* =========================================================
+       FEATURE SECTION
+       ========================================================= */
+
+    .vh-features {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: nowrap;
+        margin-top: 30px;
+    }
+
+    /* =========================================================
+       FEATURE CARD
+       ========================================================= */
+
+    .vh-feature {
+        flex: 1 1 0;
+        width: 195px;
+        max-width: 240px;
+        min-width: 0;
+        min-height: 130px;
+        padding: 18px 15px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        background: rgba(255, 241, 232, 0.10);
+        border: 1px solid rgba(255, 241, 232, 0.25);
+        backdrop-filter: blur(7px);
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .vh-feature:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 241, 232, 0.18);
+    }
+
+    /* =========================================================
+       FEATURE ICON PLACEHOLDER
+       ========================================================= */
+
+    .vh-feature-icon {
+        width: 38px;
+        height: 38px;
+        margin: 0 auto 10px;
+        border-radius: 7px;
+        background: var(--vh-light-blue);
+        border: 3px solid var(--vh-cream);
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+       FEATURE TITLE
+       ========================================================= */
+
+    .vh-feature h5 {
+        margin: 0 0 6px;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--vh-cream);
+    }
+
+    /* =========================================================
+       FEATURE DESCRIPTION
+       ========================================================= */
+
+    .vh-feature p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: rgba(255, 241, 232, 0.9);
+    }
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @@media (max-width: 900px) {
+        .vh-content {
+            padding: 24px;
+        }
+
+        .vh-logo {
+            width: 78px;
+            height: 78px;
+        }
+
+        .vh-features {
+            gap: 10px;
+        }
+
+        .vh-feature {
+            padding: 14px 10px;
+        }
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @@media (max-width: 700px) {
+        .vh-content {
+            padding: 25px 15px;
+        }
+
+        .vh-features {
+            flex-wrap: wrap;
+        }
+
+        .vh-feature {
+            flex: 1 1 140px;
+            max-width: 240px;
+        }
+
+        .vh-circle-three,
+        .vh-circle-four {
+            display: none;
+        }
+    }
+
+    /* =========================================================
+       SHORT SCREENS
+       Keep the logo visible.
+       ========================================================= */
+
+    @@media (max-height: 700px) {
+        .vh-content {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .vh-logo {
+            width: 65px;
+            height: 65px;
+            margin-bottom: 8px;
+        }
+
+        .vh-logo::before {
+            width: 28px;
+            height: 28px;
+            border-width: 4px;
+        }
+
+        .vh-logo::after {
+            width: 38px;
+            height: 4px;
+        }
+
+        .vh-brand {
+            font-size: 40px;
+        }
+
+        .vh-tagline {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .vh-description {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .vh-login-btn {
+            padding: 11px 30px;
+            font-size: 14px;
+        }
+
+        .vh-features {
+            margin-top: 18px;
+        }
+
+        .vh-feature {
+            min-height: 95px;
+            padding: 10px;
+        }
+
+        .vh-feature-icon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 6px;
+        }
+
+        .vh-feature h5 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .vh-feature p {
+            font-size: 11px;
+        }
+    }
+
+    /* =========================================================
+       VERY SHORT SCREENS
+       The logo is intentionally NOT hidden.
+       ========================================================= */
+
+    @@media (max-height: 550px) {
+        .vh-logo {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 6px;
+        }
+
+        .vh-logo::before {
+            width: 24px;
+            height: 24px;
+            border-width: 3px;
+        }
+
+        .vh-logo::after {
+            width: 32px;
+            height: 3px;
+        }
+
+        .vh-brand {
+            font-size: 32px;
+        }
+
+        .vh-tagline {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .vh-description {
+            max-width: 600px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .vh-login-btn {
+            padding: 8px 24px;
+            font-size: 13px;
+        }
+
+        .vh-features {
+            margin-top: 10px;
+        }
+
+        .vh-feature {
+            min-height: 75px;
+            padding: 8px;
+        }
+
+        .vh-feature-icon {
+            display: none;
+        }
+
+        .vh-feature h5 {
+            font-size: 13px;
+        }
+
+        .vh-feature p {
+            font-size: 10px;
+        }
+    }
+</style>
+
+<!-- =========================================================
+     VOLUNTEERHUB LANDING PAGE
+     ========================================================= -->
+
+<div class="vh-hero">
+
+    <!-- BACKGROUND DECORATION -->
+
+    <div class="vh-circle vh-circle-one"></div>
+    <div class="vh-circle vh-circle-two"></div>
+    <div class="vh-circle vh-circle-three"></div>
+    <div class="vh-circle vh-circle-four"></div>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="vh-content">
+
+        <!-- LOGO -->
+
+        <div class="vh-logo" aria-label="VolunteerHub logo"></div>
+
+        <!-- BRAND NAME -->
+
+        <h1 class="vh-brand">VolunteerHub</h1>
+
+        <!-- TAGLINE -->
+
+        <div class="vh-tagline">
+            Connect. Volunteer. Make an Impact.
+        </div>
+
+        <!-- DESCRIPTION -->
+
+        <p class="vh-description">
+            Welcome to VolunteerHub, a platform designed to
+            connect volunteers, staff and organizations.
+            Manage community projects, attendance,
+            volunteer hours, reports and certificates
+            all in one place.
+        </p>
+
+        <!-- LOGIN BUTTON -->
+
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="vh-login-btn">
+            Login to VolunteerHub
+        </a>
+
+        <!-- FEATURES -->
+
+        <div class="vh-features">
+
+            <!-- PROJECTS -->
+
+            <div class="vh-feature">
+                <div class="vh-feature-icon"></div>
+
+                <h5>Projects</h5>
+
+                <p>
+                    Manage community projects and
+                    volunteer opportunities.
+                </p>
+            </div>
+
+            <!-- VOLUNTEERS -->
+
+            <div class="vh-feature">
+                <div class="vh-feature-icon"></div>
+
+                <h5>Volunteers</h5>
+
+                <p>
+                    Connect volunteers with
+                    meaningful projects.
+                </p>
+            </div>
+
+            <!-- ATTENDANCE -->
+
+            <div class="vh-feature">
+                <div class="vh-feature-icon"></div>
+
+                <h5>Attendance</h5>
+
+                <p>
+                    Record and verify volunteer
+                    attendance and hours.
+                </p>
+            </div>
+
+            <!-- CERTIFICATES -->
+
+            <div class="vh-feature">
+                <div class="vh-feature-icon"></div>
+
+                <h5>Certificates</h5>
+
+                <p>
+                    Keep track of volunteer
+                    achievements and certificates.
+                </p>
+            </div>
+
+        </div>
+    </main>
+</div>

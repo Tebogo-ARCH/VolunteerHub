@@ -1,0 +1,144 @@
+﻿@model List<VolunteerHub.Models.ProjectAssignment>
+
+@{
+    ViewData["Title"] = "Volunteer Applications";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1">Volunteer Applications</h1>
+
+            <p class="text-muted mb-1">
+                Review applications for the selected project.
+            </p>
+
+            <p class="mb-0">
+                <strong>Project:</strong>
+                @ViewBag.ProjectName
+            </p>
+        </div>
+
+        <a asp-controller="StaffProjects"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to Projects
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var request in Model)
+            {
+                <div class="col-md-6 col-xl-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <h4 class="card-title mb-3">
+                                @request.Project.ProjectName
+                            </h4>
+
+                            <p class="mb-2">
+                                <strong>Volunteer:</strong><br />
+                                @request.VidNavigation.PidNavigation.FirstName
+                                @request.VidNavigation.PidNavigation.LastName
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Project start date:</strong><br />
+                                @request.Project.StartDate.ToString("dd MMM yyyy")
+                            </p>
+
+                            <p class="mb-3">
+                                <strong>Request status:</strong>
+
+                                <span class="badge bg-warning text-dark">
+                                    @request.Status
+                                </span>
+                            </p>
+
+                            <div class="mt-auto">
+                                <div class="d-flex gap-2">
+
+                                    <form asp-controller="StaffProjects"
+                                          asp-action="AcceptRequest"
+                                          method="post"
+                                          class="flex-fill">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@request.AssignId" />
+
+                                        <input type="hidden"
+                                               name="projectId"
+                                               value="@request.ProjectId" />
+
+                                        <button type="submit"
+                                                class="btn btn-success w-100">
+                                            Accept
+                                        </button>
+                                    </form>
+
+                                    <form asp-controller="StaffProjects"
+                                          asp-action="DeclineRequest"
+                                          method="post"
+                                          class="flex-fill">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@request.AssignId" />
+
+                                        <input type="hidden"
+                                               name="projectId"
+                                               value="@request.ProjectId" />
+
+                                        <button type="submit"
+                                                class="btn btn-outline-danger w-100">
+                                            Decline
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h4>No Pending Applications</h4>
+
+                <p class="text-muted mb-0">
+                    There are no pending volunteer applications for this project.
+                </p>
+            </div>
+        </div>
+    }
+
+</div>

@@ -1,0 +1,122 @@
+﻿
+@model List<VolunteerHub.Models.Announcement>
+
+@{
+    ViewData["Title"] = "Announcements";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="vh-dashboard-header mb-4 p-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <span class="badge bg-light text-dark mb-2">
+                    COMMUNICATION
+                </span>
+
+                <h1 class="mb-2">Announcements</h1>
+
+                <p class="mb-0">
+                    View and manage announcements for
+                    your organization.
+                </p>
+            </div>
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a asp-controller="ManagerCommunication"
+                   asp-action="Create"
+                   class="btn btn-primary">
+                    Send Communication
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="card vh-dashboard-card">
+            <div class="card-body text-center py-5">
+                <h4>No Announcements Yet</h4>
+
+                <p class="text-muted">
+                    Your announcements will appear here after you create them.
+                </p>
+
+                <a asp-controller="ManagerCommunication"
+                   asp-action="Create"
+                   class="btn btn-primary">
+                    Create Announcement
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var announcement in Model)
+            {
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <div class="card vh-dashboard-card h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <span class="badge bg-secondary align-self-start mb-3">
+                                ANNOUNCEMENT
+                            </span>
+
+                            <h5 class="mb-3">
+                                @announcement.Title
+                            </h5>
+
+                            <p class="text-muted">
+                                @(
+                                    announcement.Content.Length > 150
+                                    ? announcement.Content.Substring(0, 150) + "..."
+                                    : announcement.Content
+                                )
+                            </p>
+
+                            <div class="mt-auto">
+                                <hr />
+
+                                <small class="text-muted d-block mb-3">
+                                    Created:
+                                    @(announcement.CreatedAt?.ToString("dd MMM yyyy, HH:mm")
+                                        ?? "Date unavailable")
+                                </small>
+
+                                <a asp-controller="ManagerCommunication"
+                                   asp-action="Details"
+                                   asp-route-id="@announcement.AnnId"
+                                   class="btn btn-primary">
+                                    View Details
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <a asp-controller="Manager"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+        Back to Dashboard
+    </a>
+
+</div>

@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewData["Title"] = "Send Communication";
+}
+
+<div class="container mt-4">
+    <div class="mb-4">
+        <h2>Send Communication</h2>
+        <p class="text-muted">
+            Create an announcement for your organization.
+        </p>
+        <p>
+            <strong>Organization:</strong>
+            @ViewBag.OrganizationName
+        </p>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-controller="ManagerCommunication"
+                  asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">
+                        Communication Title
+                    </label>
+
+                    <input type="text"
+                           id="title"
+                           name="title"
+                           class="form-control"
+                           maxlength="200"
+                           placeholder="Enter communication title"
+                           required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="content" class="form-label">
+                        Message
+                    </label>
+
+                    <textarea id="content"
+                              name="content"
+                              class="form-control"
+                              rows="7"
+                              placeholder="Write your announcement here..."
+                              required></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Send Communication
+                    </button>
+
+                    <a asp-controller="ManagerCommunication"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

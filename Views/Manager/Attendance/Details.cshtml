@@ -1,0 +1,188 @@
+﻿@model VolunteerHub.Models.Attendance
+@{
+    ViewData["Title"] = "Attendance Details";
+}
+<div class="container-fluid py-4">
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    Attendance Details
+                </h1>
+                <p class="mb-2">
+                    Volunteer attendance information.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATTENDANCE CARD-->
+
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">
+                    @Model.VidNavigation.PidNavigation.FirstName
+                    @Model.VidNavigation.PidNavigation.LastName
+                </span>
+                <span class="badge bg-light text-dark">
+                    Attendance ID: @Model.AttId
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">
+                Attendance Information
+            </h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>Attendance ID</strong>
+                    <div class="mt-1">
+                        @Model.AttId
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Volunteer Name</strong>
+                    <div class="mt-1">
+                        @Model.VidNavigation.PidNavigation.FirstName
+                        @Model.VidNavigation.PidNavigation.LastName
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Project ID</strong>
+                    <div class="mt-1">
+                        @Model.ProjectId
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Project Name</strong>
+                    <div class="mt-1">
+                        @Model.Project.ProjectName
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h4 class="mb-3">
+                Attendance Record
+            </h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>Attendance Date</strong>
+                    <div class="mt-1">
+                        @Model.AttDate
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Status</strong>
+                    <div class="mt-1">
+                        @if (!string.IsNullOrWhiteSpace(Model.Status))
+                        {
+                            <span class="badge bg-primary">
+                                @Model.Status
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not specified
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Hours Worked</strong>
+                    <div class="mt-1">
+                        @if (Model.HoursWorked.HasValue)
+                        {
+                            @Model.HoursWorked.Value.ToString("0.00")
+                        }
+                        else
+                        {
+                            <span>
+                                0.00
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Verified</strong>
+                    <div class="mt-1">
+                        @if (Model.Verified == true)
+                        {
+                            <span class="badge bg-success">
+                                Verified
+                            </span>
+                        }
+                        else if (Model.Verified == false)
+                        {
+                            <span class="badge bg-danger">
+                                Not Verified
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                Pending
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- STAFF-->
+
+            <h4 class="mb-3">
+                Recorded By
+            </h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>Staff ID</strong>
+                    <div class="mt-1">
+                        @Model.Sid
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Staff Member</strong>
+                    <div class="mt-1">
+                        @* Check the staff record and linked person record exist. *@
+                        @if (Model.SidNavigation != null &&
+                             Model.SidNavigation.PidNavigation != null)
+                        {
+                            @Model.SidNavigation.PidNavigation.FirstName
+                            @Model.SidNavigation.PidNavigation.LastName
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not Available
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-controller="ManagerAttendance"
+                   asp-action="Index"
+                   class="btn btn-secondary me-2">
+                    Back to Attendance
+                </a>
+                <a asp-controller="Manager"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

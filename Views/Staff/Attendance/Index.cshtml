@@ -1,0 +1,231 @@
+﻿@model List<VolunteerHub.Models.Project>
+@{
+    ViewData["Title"] = "Attendance";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Staff Portal
+                </div>
+                <h1 class="mb-2">
+                    Record Attendance
+                </h1>
+                <p class="mb-2">
+                    Select a project to record volunteer attendance.
+                </p>
+                <p class="mb-0">
+                    Staff:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search box -->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <label for="projectSearch"
+                   class="form-label">
+                Search Projects
+            </label>
+            <input type="text"
+                   id="projectSearch"
+                   class="form-control"
+                   placeholder="Search projects..."
+                   onkeyup="searchProjects()" />
+        </div>
+    </div>
+
+    <!-- Projects table -->
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        Available Projects
+                    </span>
+                    <span class="badge bg-light text-dark">
+                        @Model.Count Project(s)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle"
+                           id="projectsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Project ID
+                                </th>
+                                <th>
+                                    Project Name
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                                <th>
+                                    Start Date
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            @project.ProjectId
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @project.ProjectName
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(project.Location))
+                                        {
+                                            @project.Location
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @project.StartDate.ToString("dd MMM yyyy")
+                                    </td>
+                                    <td>
+                                        @if (project.EndDate.HasValue)
+                                        {
+                                            @project.EndDate.Value.ToString("dd MMM yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (project.Status == "COMPLETED")
+                                        {
+                                            <span class="badge bg-success">
+                                                COMPLETED
+                                            </span>
+                                        }
+                                        else if (project.Status == "PLANNING")
+                                        {
+                                            <span class="badge bg-secondary">
+                                                PLANNING
+                                            </span>
+                                        }
+                                        else if (project.Status == "ACTIVE")
+                                        {
+                                            <span class="badge bg-primary">
+                                                ACTIVE
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @project.Status
+                                            </span>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <a asp-controller="StaffAttendance"
+                                               asp-action="Record"
+                                               asp-route-id="@project.ProjectId"
+                                               class="btn btn-sm btn-primary">
+                                                Record Attendance
+                                            </a>
+                                            <a asp-controller="StaffAttendance"
+                                               asp-action="Completion"
+                                               asp-route-id="@project.ProjectId"
+                                               class="btn btn-sm btn-secondary">
+                                                Review Completion
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="vh-empty-state">
+            <h3>
+                No Projects Found
+            </h3>
+            <p class="text-muted">
+                There are currently no projects available
+                for your organization.
+            </p>
+        </div>
+    }
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+
+    function searchProjects() {
+        var input =
+            document.getElementById("projectSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("projectsTable");
+        if (!table) {
+            return;
+        }
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

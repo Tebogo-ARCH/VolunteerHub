@@ -1,0 +1,268 @@
+﻿@model VolunteerHub.Models.ViewModels.VolunteerProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+<div class="container-fluid mt-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        My Profile
+                    </h1>
+                    <p class="text-muted mb-0">
+                        View and update your personal information,
+                        address and skills.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a asp-controller="Volunteer"
+                       asp-action="Index"
+                       class="btn btn-secondary">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+  
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    <!-- PROFILE FORM -->
+    
+    <form asp-action="Profile"
+          asp-controller="Volunteer"
+          method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden"
+               asp-for="Vid" />
+        <input type="hidden"
+               asp-for="Pid" />
+
+        <!-- PERSONAL INFORMATION -->
+       
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h3 class="mb-4">
+                    Personal Information
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FirstName"
+                               class="form-label">
+                            First Name
+                        </label>
+                        <input asp-for="FirstName"
+                               class="form-control" />
+                        <span asp-validation-for="FirstName"
+                              class="text-danger">
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LastName"
+                               class="form-label">
+                            Last Name
+                        </label>
+                        <input asp-for="LastName"
+                               class="form-control" />
+                        <span asp-validation-for="LastName"
+                              class="text-danger">
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="UserName"
+                               class="form-label">
+                            Username
+                        </label>
+                        <input asp-for="UserName"
+                               class="form-control"
+                               readonly />
+                        <small class="text-muted">
+                            Username cannot be changed here.
+                        </small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email"
+                               class="form-label">
+                            Email
+                        </label>
+                        <input asp-for="Email"
+                               class="form-control" />
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Phone"
+                               class="form-label">
+                            Phone
+                        </label>
+                        <input asp-for="Phone"
+                               class="form-control" />
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h3 class="mb-4">
+                    My Address
+                </h3>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="StreetAddress"
+                               class="form-label">
+                            Street Address
+                        </label>
+                        <input asp-for="StreetAddress"
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Suburb"
+                               class="form-label">
+                            Suburb
+                        </label>
+                        <input asp-for="Suburb"
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="City"
+                               class="form-label">
+                            City
+                        </label>
+                        <input asp-for="City"
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Province"
+                               class="form-label">
+                            Province
+                        </label>
+                        <input asp-for="Province"
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PostalCode"
+                               class="form-label">
+                            Postal Code
+                        </label>
+                        <input asp-for="PostalCode"
+                               class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h3 class="mb-2">
+                    My Skills
+                </h3>
+                <p class="text-muted">
+                    Select the skills that you have.
+                </p>
+                <div class="row">
+                    @if (Model.AvailableSkills != null &&
+                         Model.AvailableSkills.Any())
+                    {
+                        foreach (var skill in Model.AvailableSkills)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="SelectedSkillIds"
+                                           value="@skill.SkillId"
+                                           id="skill_@skill.SkillId"
+                                    @(Model.SelectedSkillIds.Contains(skill.SkillId)
+                                        ? "checked"
+                                        : "") />
+                                    <label class="form-check-label"
+                                           for="skill_@skill.SkillId">
+                                        <strong>
+                                            @skill.SkillName
+                                        </strong>
+                                        @if (!string.IsNullOrEmpty(skill.SkillDescription))
+                                        {
+                                            <br />
+                                            <small class="text-muted">
+                                                @skill.SkillDescription
+                                            </small>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <p class="text-muted">
+                                No skills are currently available.
+                            </p>
+                        </div>
+                    }
+                </div>
+                <hr class="my-4" />
+                <h4>
+                    Add Your Own Skills
+                </h4>
+                <p class="text-muted">
+                    Can't find one of your skills above?
+                    Add it here.
+                </p>
+                <div class="mb-3">
+                    <label asp-for="NewSkills"
+                           class="form-label">
+                        New Skills
+                    </label>
+                    <input asp-for="NewSkills"
+                           class="form-control"
+                           placeholder="Example: Photography, First Aid, Graphic Design" />
+                    <small class="text-muted">
+                        You can enter multiple skills separated by commas.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-5">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Volunteer"
+                       asp-action="Index"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Update Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

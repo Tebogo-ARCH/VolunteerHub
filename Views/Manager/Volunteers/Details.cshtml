@@ -1,0 +1,187 @@
+﻿@model VolunteerHub.Models.Volunteer
+@{
+    ViewData["Title"] = "Volunteer Details";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    Volunteer Details
+                </h1>
+                <p class="mb-2">
+                    Volunteer information.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOLUNTEER INFORMATION -->
+   
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">
+                    @Model.PidNavigation.FirstName
+                    @Model.PidNavigation.LastName
+                </span>
+                <span class="badge bg-light text-dark">
+                    Volunteer ID: @Model.Vid
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <h4 class="mb-3">
+                Personal Information
+            </h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>First Name</strong>
+                    <div class="mt-1">
+                        @Model.PidNavigation.FirstName
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Last Name</strong>
+                    <div class="mt-1">
+                        @Model.PidNavigation.LastName
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Email</strong>
+                    <div class="mt-1">
+                        @if (!string.IsNullOrWhiteSpace(Model.PidNavigation.Email))
+                        {
+                            @Model.PidNavigation.Email
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not provided
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Phone</strong>
+                    <div class="mt-1">
+                        @(Model.PidNavigation.Phone ?? "Not provided")
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Account Status</strong>
+                    <div class="mt-1">
+                        @if (!string.IsNullOrWhiteSpace(Model.PidNavigation.Status))
+                        {
+                            <span class="badge bg-primary">
+                                @Model.PidNavigation.Status
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not specified
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- VOLUNTEER INFORMATION -->
+
+            <h4 class="mb-3">
+                Volunteer Information
+            </h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <strong>Volunteer ID</strong>
+                    <div class="mt-1">
+                        @Model.Vid
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <strong>Person ID</strong>
+                    <div class="mt-1">
+                        @Model.Pid
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <!-- ADDRESS -->
+
+            <h4 class="mb-3">
+                Address
+            </h4>
+            @if (Model.PidNavigation.Address != null)
+            {
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <strong>Street Address</strong>
+                        <div class="mt-1">
+                            @Model.PidNavigation.Address.StreetAddress
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <strong>Suburb</strong>
+                        <div class="mt-1">
+                            @(Model.PidNavigation.Address.Suburb ?? "Not provided")
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <strong>City</strong>
+                        <div class="mt-1">
+                            @Model.PidNavigation.Address.City
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <strong>Province</strong>
+                        <div class="mt-1">
+                            @Model.PidNavigation.Address.Province
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <strong>Postal Code</strong>
+                        <div class="mt-1">
+                            @(Model.PidNavigation.Address.PostalCode ?? "Not provided")
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No address has been assigned to this volunteer.
+                </div>
+            }
+
+            <div class="text-center mt-4">
+                <a asp-controller="ManagerVolunteer"
+                   asp-action="Index"
+                   class="btn btn-secondary me-2">
+                    Back to Volunteers
+                </a>
+                <a asp-controller="Manager"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,370 @@
+﻿
+@model VolunteerHub.Models.ViewModels.VolunteerProjectViewModel
+
+@{
+    ViewData["Title"] = "Project Details";
+
+    var projectStatus = Model.Status ?? "Unknown";
+    var assignmentStatus = Model.AssignmentStatus ?? "Unknown";
+
+    var statusClass = projectStatus.Equals(
+        "ACTIVE", StringComparison.OrdinalIgnoreCase)
+        ? "status-active"
+        : "status-default";
+}
+
+<style>
+    .project-details-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 16px 48px;
+        color: #0C1F3F;
+    }
+
+    .project-details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .project-details-heading {
+        margin: 0 0 8px;
+        font-size: clamp(26px, 4vw, 36px);
+        font-weight: 800;
+        color: #0C1F3F;
+    }
+
+    .project-details-subtitle {
+        margin: 0;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .project-details-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(12, 31, 63, 0.07);
+        margin-bottom: 24px;
+    }
+
+    .project-details-card-header {
+        padding: 22px 26px;
+        background: #0C1F3F;
+        color: #ffffff;
+    }
+
+    .project-details-card-header h2 {
+        margin: 0 0 10px;
+        font-size: 25px;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .project-details-card-header p {
+        margin: 0;
+        color: #dbeafe;
+        line-height: 1.7;
+    }
+
+    .project-details-card-body {
+        padding: 26px;
+    }
+
+    .details-section-title {
+        font-size: 17px;
+        font-weight: 750;
+        color: #2F5DA8;
+        margin: 0 0 18px;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .detail-item {
+        min-width: 0;
+        padding: 15px;
+        border: 1px solid #e8edf5;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+
+    .detail-label {
+        display: block;
+        margin-bottom: 7px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+    }
+
+    .detail-value {
+        display: block;
+        color: #0C1F3F;
+        font-size: 15px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        line-height: 1.6;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: capitalize;
+    }
+
+    .status-active {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .status-default {
+        color: #334155;
+        background: #e2e8f0;
+    }
+
+    .project-details-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .btn-project-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 18px;
+        border: 1px solid #2F5DA8;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #2F5DA8;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s ease, color .2s ease;
+    }
+
+    .btn-project-back:hover {
+        background: #2F5DA8;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .project-details-note {
+        margin-top: 18px;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 640px) {
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .project-details-card-body {
+            padding: 18px;
+        }
+
+        .project-details-card-header {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="project-details-page">
+
+    <div class="project-details-header">
+        <div>
+            <h1 class="project-details-heading">Project Details</h1>
+            <p class="project-details-subtitle">
+                View information about your assigned project.
+            </p>
+        </div>
+
+        <a asp-controller="VolunteerProjects"
+           asp-action="Ongoing"
+           class="btn-project-back">
+            Back to Ongoing Projects
+        </a>
+    </div>
+
+    <!-- Project overview -->
+    <section class="project-details-card">
+        <div class="project-details-card-header">
+            <h2>@Model.ProjectName</h2>
+
+            <p>
+                @(string.IsNullOrWhiteSpace(Model.Description)
+                    ? "No project description has been provided."
+                    : Model.Description)
+            </p>
+        </div>
+
+        <div class="project-details-card-body">
+            <h3 class="details-section-title">Project Information</h3>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Project ID</span>
+                    <span class="detail-value">@Model.ProjectId</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Project Status</span>
+                    <span class="detail-value">
+                        <span class="status-badge @statusClass">
+                            @projectStatus
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Start Date</span>
+                    <span class="detail-value">
+                        @Model.StartDate.ToString("dd MMM yyyy")
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">End Date</span>
+                    <span class="detail-value">
+                        @(Model.EndDate.HasValue
+                            ? Model.EndDate.Value.ToString("dd MMM yyyy")
+                            : "Not specified")
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Project Location</span>
+                    <span class="detail-value">
+                        @(string.IsNullOrWhiteSpace(Model.Location)
+                            ? "Not specified"
+                            : Model.Location)
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Your Assignment</span>
+                    <span class="detail-value">
+                        @assignmentStatus
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Organization information -->
+    <section class="project-details-card">
+        <div class="project-details-card-body">
+            <h3 class="details-section-title">
+                <span aria-hidden="true"> </span>
+                Organization Information
+            </h3>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Organization Name</span>
+                    <span class="detail-value">
+                        @(string.IsNullOrWhiteSpace(Model.OrganizationName)
+                            ? "Not available"
+                            : Model.OrganizationName)
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Organization Email</span>
+                    <span class="detail-value">
+                        @if (!string.IsNullOrWhiteSpace(Model.OrganizationEmail))
+                        {
+                            <a href="mailto:@Model.OrganizationEmail">
+                                @Model.OrganizationEmail
+                            </a>
+                        }
+                        else
+                        {
+                            <text>Not available</text>
+                        }
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Organization Phone</span>
+                    <span class="detail-value">
+                        @if (!string.IsNullOrWhiteSpace(Model.OrganizationPhone))
+                        {
+                            <a href="tel:@Model.OrganizationPhone">
+                                @Model.OrganizationPhone
+                            </a>
+                        }
+                        else
+                        {
+                            <text>Not available</text>
+                        }
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Organization Address</span>
+                    <span class="detail-value">
+                        @{
+                            var addressParts = new[]
+                            {
+                                Model.OrganizationStreetAddress,
+                                Model.OrganizationSuburb,
+                                Model.OrganizationCity,
+                                Model.OrganizationProvince,
+                                Model.OrganizationPostalCode
+                            };
+
+                            var organizationAddress = string.Join(
+                                ", ",
+                                addressParts.Where(part =>
+                                    !string.IsNullOrWhiteSpace(part))
+                            );
+                        }
+
+                        @(string.IsNullOrWhiteSpace(organizationAddress)
+                            ? "Not available"
+                            : organizationAddress)
+                    </span>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.OrganizationDescription))
+            {
+                <div class="detail-item" style="margin-top: 20px;">
+                    <span class="detail-label">About the Organization</span>
+                    <span class="detail-value">
+                        @Model.OrganizationDescription
+                    </span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="project-details-actions">
+        <a asp-controller="VolunteerProjects"
+           asp-action="Ongoing"
+           class="btn-project-back">
+            Return to Ongoing Projects
+        </a>
+    </div>
+
+    <p class="project-details-note">
+        This information relates to the project assigned to your volunteer account.
+        Contact your organization's staff if you need clarification about your assignment.
+    </p>
+
+</div>

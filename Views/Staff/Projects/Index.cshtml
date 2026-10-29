@@ -1,0 +1,190 @@
+﻿@model List<VolunteerHub.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+    <div class="text-center mb-5">
+        <h1>Projects</h1>
+
+        <p class="lead">
+            View projects and manage volunteer applications
+        </p>
+
+        <p>
+            Staff:
+            <strong>@ViewBag.FirstName @ViewBag.LastName</strong>
+        </p>
+    </div>
+
+    <!-- SEARCH BOX -->
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <input type="text"
+                   id="projectSearch"
+                   class="form-control"
+                   placeholder="Search projects..."
+                   onkeyup="searchProjects()" />
+        </div>
+    </div>
+
+    <!-- PROJECTS TABLE -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover"
+                           id="projectsTable">
+
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Project Name</th>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var project in Model)
+                            {
+                                var status = project.Status?.Trim();
+
+                                var isCompleted = string.Equals(
+                                    status,
+                                    "COMPLETED",
+                                    StringComparison.OrdinalIgnoreCase);
+
+                                var isCanceled =
+                                    string.Equals(status, "CANCELED",
+                                        StringComparison.OrdinalIgnoreCase) ||
+                                    string.Equals(status, "CANCELLED",
+                                        StringComparison.OrdinalIgnoreCase);
+
+                                var disableReviewRequests = isCompleted || isCanceled;
+
+                                <tr>
+                                    <td>@project.ProjectId</td>
+
+                                    <td>
+                                        <strong>@project.ProjectName</strong>
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(project.Location)
+                                            ? "Not specified"
+                                            : project.Location)
+                                    </td>
+
+                                    <td>
+                                        @project.StartDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        @if (project.EndDate.HasValue)
+                                        {
+                                            @project.EndDate.Value.ToString("dd MMM yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span>Not specified</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(project.Status))
+                                        {
+                                            var statusClass = isCompleted
+                                                ? "bg-secondary"
+                                                : "bg-primary";
+
+                                            <span class="badge @statusClass">
+                                                @project.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>Not specified</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (disableReviewRequests)
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-secondary"
+                                                    disabled
+                                                    title="Requests cannot be reviewed for completed or canceled projects.">
+                                                Review Requests
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="StaffProjects"
+                                               asp-action="Requests"
+                                               asp-route-projectId="@project.ProjectId"
+                                               class="btn btn-sm btn-primary">
+                                                Review Requests
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body text-center p-5">
+                <h3>No Projects Found</h3>
+
+                <p class="text-muted">
+                    There are currently no projects available.
+                </p>
+            </div>
+        </div>
+    }
+
+    <!-- BACK TO DASHBOARD -->
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+<script>
+    function searchProjects() {
+        var input = document.getElementById("projectSearch");
+        var filter = input.value.toLowerCase();
+        var table = document.getElementById("projectsTable");
+
+        if (!table) {
+            return;
+        }
+
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 1; i < rows.length; i++) {
+            var rowText = rows[i].textContent.toLowerCase();
+
+            rows[i].style.display =
+                rowText.includes(filter) ? "" : "none";
+        }
+    }
+</script>

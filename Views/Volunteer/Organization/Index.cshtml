@@ -1,0 +1,95 @@
+﻿@model VolunteerHub.Models.Organization
+@{
+    ViewData["Title"] = "My Organization";
+}
+<div class="container-fluid mt-4">
+
+    <!-- PAGE HEADER -->
+   
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        My Organization
+                    </h1>
+                    <p class="text-muted mb-0">
+                        View information about the NGO you are volunteering for.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIZATION INFORMATION -->
+    
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="mb-4">
+                @Model.OrgName
+            </h2>
+            <div class="mb-4">
+                <h5>
+                    Description
+                </h5>
+                <p class="text-muted">
+                    @Model.Description
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5>
+                        Contact Information
+                    </h5>
+                    <p class="mb-2">
+                        <strong>Email:</strong>
+                        @Model.Email
+                    </p>
+                    <p class="mb-2">
+                        <strong>Phone:</strong>
+                        @Model.Phone
+                    </p>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5>
+                        Address
+                    </h5>
+                    @if (Model.Address != null)
+                    {
+                        <p class="mb-1">
+                            @Model.Address.StreetAddress
+                        </p>
+                        <p class="mb-1">
+                            @Model.Address.Suburb
+                        </p>
+                        <p class="mb-1">
+                            @Model.Address.City
+                        </p>
+                        <p class="mb-1">
+                            @Model.Address.Province
+                        </p>
+                        @if (!string.IsNullOrEmpty(Model.Address.PostalCode))
+                        {
+                            <p class="mb-1">
+                                @Model.Address.PostalCode
+                            </p>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            Address not available.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-5">
+        <a asp-controller="Volunteer"
+           asp-action="Index"
+           class="btn btn-primary">
+            Back to Volunteer Dashboard
+        </a>
+    </div>
+</div>

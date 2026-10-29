@@ -1,0 +1,278 @@
+﻿@{
+    ViewData["Title"] = "Manager Dashboard";
+}
+<div class="container-fluid py-4">
+
+    <!-- DASHBOARD HEADER -->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="mb-2">
+                    <span class="badge bg-light text-dark">
+                        MANAGER PORTAL
+                    </span>
+                </div>
+                <h1 class="mb-2">
+                    Manager Dashboard
+                </h1>
+                <p class="lead mb-0">
+                    Welcome,
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a asp-controller="Account"
+                   asp-action="Logout"
+                   class="btn btn-danger">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIZATION -->
+    @if (ViewBag.OrganizationName != null)
+    {
+        <div class="card vh-organization mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge bg-primary mb-2">
+                            ORGANIZATION
+                        </span>
+                        <h3 class="mb-2">
+                            @ViewBag.OrganizationName
+                        </h3>
+                        @if (ViewBag.OrganizationEmail != null)
+                        {
+                            <p class="mb-1">
+                                <strong>Email:</strong>
+                                @ViewBag.OrganizationEmail
+                            </p>
+                        }
+                        @if (ViewBag.OrganizationPhone != null)
+                        {
+                            <p class="mb-1">
+                                <strong>Phone:</strong>
+                                @ViewBag.OrganizationPhone
+                            </p>
+                        }
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a asp-controller="ManagerOrganization"
+                           asp-action="Index"
+                           class="btn btn-outline-primary">
+                            View Organization
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card vh-organization mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge bg-secondary mb-2">
+                            ORGANIZATION
+                        </span>
+                        <h3>
+                            Organization
+                        </h3>
+                        <p class="text-muted mb-0">
+                            No organization assigned.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a asp-controller="ManagerOrganization"
+                           asp-action="Index"
+                           class="btn btn-outline-primary">
+                            View Organization
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- DASHBOARD CARDS -->
+
+    <div class="row">
+        <!-- STAFF -->
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            STAFF
+                        </span>
+                    </div>
+                    <div class="vh-dashboard-number">
+                        @ViewBag.StaffCount
+                    </div>
+                    <div class="vh-dashboard-card-title mt-2">
+                        Staff Members
+                    </div>
+                    <p class="text-muted mt-2">
+                        Staff members in your organization.
+                    </p>
+                    <a asp-controller="ManagerStaff"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Staff
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- VOLUNTEERS -->
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            VOLUNTEERS
+                        </span>
+                    </div>
+                    <div class="vh-dashboard-number">
+                        @ViewBag.VolunteerCount
+                    </div>
+                    <div class="vh-dashboard-card-title mt-2">
+                        Volunteers
+                    </div>
+                    <p class="text-muted mt-2">
+                        Volunteers in your organization.
+                    </p>
+                    <a asp-controller="ManagerVolunteer"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Volunteers
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECTS -->
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            PROJECTS
+                        </span>
+                    </div>
+                    <div class="vh-dashboard-number">
+                        @ViewBag.ProjectCount
+                    </div>
+                    <div class="vh-dashboard-card-title mt-2">
+                        Projects
+                    </div>
+                    <p class="text-muted mt-2">
+                        Projects managed by your organization.
+                    </p>
+                    <a asp-controller="ManagerProjects"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEND COMMUNICATION -->
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            COMMUNICATION
+                        </span>
+                    </div>
+
+                    <div class="vh-dashboard-number"
+                         aria-hidden="true">
+                        &nbsp;
+                    </div>
+
+                    <div class="vh-dashboard-card-title mt-2">
+                        Send Communication
+                    </div>
+
+                    <p class="text-muted mt-2">
+                        Create and share announcements with your organization.
+                    </p>
+
+                    <a asp-controller="ManagerCommunication"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage Communication
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ATTENDANCE -->
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            ATTENDANCE
+                        </span>
+                    </div>
+                    <div class="vh-dashboard-number">
+                        @ViewBag.AttendanceCount
+                    </div>
+                    <div class="vh-dashboard-card-title mt-2">
+                        Attendance
+                    </div>
+                    <p class="text-muted mt-2">
+                        Attendance records for your volunteers.
+                    </p>
+                    <a asp-controller="ManagerAttendance"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORTS -->
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">
+                            REPORTS
+                        </span>
+                    </div>
+                    <div class="vh-dashboard-number">
+                        @ViewBag.ReportCount
+                    </div>
+                    <div class="vh-dashboard-card-title mt-2">
+                        Reports
+                    </div>
+                    <p class="text-muted mt-2">
+                        Reports generated for your volunteers.
+                    </p>
+                    <a asp-controller="ManagerReport"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

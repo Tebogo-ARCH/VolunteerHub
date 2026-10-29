@@ -1,0 +1,624 @@
+﻿@model VolunteerHub.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+
+    /* =========================================================
+           VOLUNTEERHUB COLORS
+           ========================================================= */
+
+    :root {
+        --vh-cream: #FFF1E8;
+        --vh-light-blue: #8FAADC;
+        --vh-blue: #2F5DA8;
+        --vh-navy: #0C1F3F;
+    }
+
+    /* =========================================================
+           PAGE RESET
+           ========================================================= */
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--vh-navy);
+        overflow: hidden;
+    }
+
+    body {
+        min-height: 100vh;
+    }
+
+    /* =========================================================
+           FULL SCREEN LOGIN BACKGROUND
+           ========================================================= */
+
+    .vh-login-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        min-width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: linear-gradient( 135deg, var(--vh-navy) 0%, var(--vh-blue) 65%, var(--vh-light-blue) 100% );
+        z-index: 9999;
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+           BACKGROUND CIRCLES
+           ========================================================= */
+
+    .vh-login-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .vh-login-circle-one {
+        width: 520px;
+        height: 520px;
+        top: -250px;
+        left: -180px;
+        background: rgba(255, 241, 232, 0.08);
+    }
+
+    .vh-login-circle-two {
+        width: 500px;
+        height: 500px;
+        bottom: -250px;
+        right: -180px;
+        background: rgba(255, 241, 232, 0.08);
+    }
+
+    .vh-login-circle-three {
+        width: 200px;
+        height: 200px;
+        top: 12%;
+        right: 10%;
+        background: rgba(143, 170, 220, 0.18);
+    }
+
+    .vh-login-circle-four {
+        width: 120px;
+        height: 120px;
+        bottom: 18%;
+        left: 10%;
+        background: rgba(255, 241, 232, 0.07);
+    }
+
+    /* =========================================================
+           LOGIN CONTENT
+           ========================================================= */
+
+    .vh-login-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 460px;
+        padding: 25px;
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+           LOGIN CARD
+           ========================================================= */
+
+    .vh-login-card {
+        width: 100%;
+        padding: 38px;
+        background: rgba(255, 241, 232, 0.97);
+        border-radius: 14px;
+        box-shadow: 0 25px 60px rgba(12, 31, 63, 0.45);
+        box-sizing: border-box;
+    }
+
+    /* =========================================================
+           LOGO
+           ========================================================= */
+
+    .vh-login-logo {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: var(--vh-navy);
+        border: 5px solid var(--vh-light-blue);
+        box-shadow: 0 10px 25px rgba(12, 31, 63, 0.25);
+    }
+
+        .vh-login-logo::before {
+            content: "";
+            width: 30px;
+            height: 30px;
+            border: 4px solid var(--vh-cream);
+            border-radius: 50%;
+            box-sizing: border-box;
+        }
+
+        .vh-login-logo::after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: var(--vh-light-blue);
+            border-radius: 10px;
+            transform: rotate(45deg);
+        }
+
+    /* =========================================================
+           BRAND
+           ========================================================= */
+
+    .vh-login-brand {
+        text-align: center;
+        margin: 0 0 5px;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: var(--vh-navy);
+    }
+
+    .vh-login-subtitle {
+        text-align: center;
+        margin: 0 0 30px;
+        color: var(--vh-blue);
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    /* =========================================================
+           FORM LABELS
+           ========================================================= */
+
+    .vh-login-label {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--vh-navy);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* =========================================================
+           FORM INPUTS
+           ========================================================= */
+
+    .vh-login-input {
+        width: 100%;
+        height: 48px;
+        padding: 10px 14px;
+        box-sizing: border-box;
+        border: 1px solid var(--vh-light-blue);
+        border-radius: 7px;
+        background: white;
+        color: var(--vh-navy);
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .vh-login-input:focus {
+            border-color: var(--vh-blue);
+            box-shadow: 0 0 0 3px rgba(47, 93, 168, 0.18);
+        }
+
+        .vh-login-input::placeholder {
+            color: #7b8798;
+        }
+
+    /* =========================================================
+           FORM GROUP
+           ========================================================= */
+
+    .vh-form-group {
+        margin-bottom: 20px;
+    }
+
+    /* =========================================================
+           VALIDATION
+           ========================================================= */
+
+    .vh-validation {
+        display: block;
+        margin-top: 6px;
+        font-size: 13px;
+        color: #a52a2a;
+    }
+
+    .vh-validation-summary {
+        margin-bottom: 20px;
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: #f8dddd;
+        color: #8b1e1e;
+        font-size: 14px;
+    }
+
+    /* =========================================================
+           SUCCESS MESSAGES
+           ========================================================= */
+
+    .vh-login-success {
+        margin-bottom: 20px;
+        padding: 12px 14px;
+        border: 1px solid #b9d7b1;
+        border-radius: 7px;
+        background: #e3eddf;
+        color: #244d2b;
+        font-size: 14px;
+    }
+
+    /* =========================================================
+           FORGOT PASSWORD LINK
+           ========================================================= */
+
+    .vh-forgot-password {
+        display: block;
+        margin-top: 8px;
+        text-align: right;
+        color: var(--vh-blue);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .vh-forgot-password:hover {
+            color: var(--vh-navy);
+            text-decoration: underline;
+        }
+
+    /* =========================================================
+           LOGIN BUTTON
+           ========================================================= */
+
+    .vh-login-submit {
+        width: 100%;
+        height: 50px;
+        border: none;
+        border-radius: 7px;
+        background: var(--vh-blue);
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .vh-login-submit:hover {
+            background: var(--vh-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(12, 31, 63, 0.25);
+        }
+
+    /* =========================================================
+           BACK TO HOME
+           ========================================================= */
+
+    .vh-back-home {
+        display: block;
+        text-align: center;
+        margin-top: 22px;
+        color: var(--vh-blue);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .vh-back-home:hover {
+            color: var(--vh-navy);
+            text-decoration: underline;
+        }
+
+    /* =========================================================
+           SECURITY TEXT
+           ========================================================= */
+
+    .vh-login-footer {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(12, 31, 63, 0.12);
+        color: #5b6b82;
+        font-size: 12px;
+    }
+
+    /* =========================================================
+           TABLET
+           ========================================================= */
+
+    @@media (max-width: 600px) {
+
+        .vh-login-content {
+            max-width: 430px;
+            padding: 20px;
+        }
+
+        .vh-login-card {
+            padding: 30px 25px;
+        }
+
+        .vh-login-brand {
+            font-size: 30px;
+        }
+    }
+
+    /* =========================================================
+           SHORT SCREEN
+           ========================================================= */
+
+    @@media (max-height: 700px) {
+
+        .vh-login-card {
+            padding: 25px 30px;
+        }
+
+        .vh-login-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+            .vh-login-logo::before {
+                width: 25px;
+                height: 25px;
+            }
+
+            .vh-login-logo::after {
+                width: 34px;
+            }
+
+        .vh-login-brand {
+            font-size: 28px;
+        }
+
+        .vh-login-subtitle {
+            margin-bottom: 18px;
+        }
+
+        .vh-form-group {
+            margin-bottom: 14px;
+        }
+
+        .vh-login-input {
+            height: 43px;
+        }
+
+        .vh-login-submit {
+            height: 45px;
+        }
+
+        .vh-login-footer {
+            margin-top: 15px;
+            padding-top: 12px;
+        }
+    }
+
+    /* =========================================================
+           VERY SHORT / ZOOMED OUT SCREEN
+           ========================================================= */
+
+    @@media (max-height: 550px) {
+
+        .vh-login-logo {
+            display: none;
+        }
+
+        .vh-login-card {
+            padding: 20px 25px;
+        }
+
+        .vh-login-brand {
+            font-size: 25px;
+        }
+
+        .vh-login-subtitle {
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .vh-form-group {
+            margin-bottom: 10px;
+        }
+
+        .vh-login-input {
+            height: 38px;
+            font-size: 13px;
+        }
+
+        .vh-login-submit {
+            height: 40px;
+            font-size: 14px;
+        }
+
+        .vh-back-home {
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .vh-login-footer {
+            display: none;
+        }
+    }
+
+</style>
+
+<!-- =========================================================
+     VOLUNTEERHUB LOGIN PAGE
+     ========================================================= -->
+
+<div class="vh-login-page">
+
+    <!-- BACKGROUND DECORATION -->
+
+    <div class="vh-login-circle vh-login-circle-one"></div>
+    <div class="vh-login-circle vh-login-circle-two"></div>
+    <div class="vh-login-circle vh-login-circle-three"></div>
+    <div class="vh-login-circle vh-login-circle-four"></div>
+
+    <!-- LOGIN CONTENT -->
+
+    <div class="vh-login-content">
+
+        <!-- LOGIN CARD -->
+
+        <div class="vh-login-card">
+
+            <!-- LOGO -->
+
+            <div class="vh-login-logo"></div>
+
+            <!-- BRAND -->
+
+            <h1 class="vh-login-brand">
+                VolunteerHub
+            </h1>
+
+            <!-- SUBTITLE -->
+
+            <p class="vh-login-subtitle">
+                Sign in to access your account
+            </p>
+
+            <!-- SHOW REGISTRATION SUCCESS MESSAGE -->
+            @if (TempData["RegistrationSuccess"] != null)
+            {
+                <div class="vh-login-success">
+                    @TempData["RegistrationSuccess"]
+                </div>
+            }
+
+            <!-- SHOW PASSWORD RESET SUCCESS MESSAGE -->
+            @if (TempData["PasswordResetSuccess"] != null)
+            {
+                <div class="vh-login-success">
+                    @TempData["PasswordResetSuccess"]
+                </div>
+            }
+
+            <!-- LOGIN FORM -->
+
+            <form asp-controller="Account"
+                  asp-action="Login"
+                  method="post">
+
+                <!-- Protect the form against cross-site request forgery -->
+                @Html.AntiForgeryToken()
+
+                <!-- DISPLAY LOGIN VALIDATION ERRORS -->
+
+                <div asp-validation-summary="ModelOnly"
+                     class="vh-validation-summary">
+                </div>
+
+                <!-- USERNAME -->
+
+                <div class="vh-form-group">
+
+                    <label asp-for="UserName"
+                           class="vh-login-label">
+                        Username
+                    </label>
+
+                    <input asp-for="UserName"
+                           class="vh-login-input"
+                           placeholder="Enter your username"
+                           autocomplete="username" />
+
+                    <span asp-validation-for="UserName"
+                          class="vh-validation">
+                    </span>
+
+                </div>
+
+                <!-- PASSWORD -->
+
+                <div class="vh-form-group">
+
+                    <label asp-for="Password"
+                           class="vh-login-label">
+                        Password
+                    </label>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="vh-login-input"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" />
+
+                    <span asp-validation-for="Password"
+                          class="vh-validation">
+                    </span>
+
+                    <!-- LINK TO FORGOT PASSWORD -->
+
+                    <a asp-controller="Account"
+                       asp-action="ForgotPassword"
+                       class="vh-forgot-password">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <!-- LOGIN BUTTON -->
+
+                <button type="submit"
+                        class="vh-login-submit">
+                    Login to VolunteerHub
+                </button>
+
+                <!-- VOLUNTEER REGISTRATION -->
+
+                <div class="text-center mt-3">
+
+                    <span>Don't have an account?</span>
+
+                    <a asp-controller="Account"
+                       asp-action="RegisterVolunteer"
+                       class="fw-bold text-decoration-none">
+                        Create Profile
+                    </a>
+
+                </div>
+
+            </form>
+
+            <!-- BACK TO HOME -->
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="vh-back-home">
+                Back to VolunteerHub
+            </a>
+
+            <!-- FOOTER -->
+
+            <div class="vh-login-footer">
+                VolunteerHub Volunteer Management Platform
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

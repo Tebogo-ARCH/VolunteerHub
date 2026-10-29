@@ -1,0 +1,261 @@
+﻿@model List<VolunteerHub.Models.ViewModels.VolunteerAttendanceViewModel>
+@{
+    ViewData["Title"] = "My Attendance";
+}
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">
+                My Attendance
+            </h1>
+            <p class="text-muted mb-0">
+                Review the attendance and hours recorded for you by staff.
+            </p>
+        </div>
+
+        <div>
+            <span class="me-3">
+                <strong>
+                    Volunteer ID:
+                </strong>
+                @ViewBag.Vid
+            </span>
+        </div>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+ 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <strong>
+                Success!
+            </strong>
+            @TempData["SuccessMessage"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+   
+    <!-- tip for the volunteer -->
+    <div class="alert alert-info alert-dismissible fade show">
+        <strong>
+            Tip:
+        </strong>
+        If you notice any discrepancies in your attendance records, please contact staff immediately.
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                Verify Your Hours
+            </h5>
+            <p class="text-muted mb-0">
+                Staff members record your attendance and hours worked.
+                Please review the information below.
+                If the recorded hours are correct, click
+                <strong>Verify Hours</strong>.
+            </p>
+        </div>
+    </div>
+
+    <!-- ATTENDANCE TABLE -->
+
+    <div class="card shadow">
+        <div class="card-header">
+            <h5 class="mb-0">
+                Attendance Records
+            </h5>
+        </div>
+
+        <div class="card-body">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-5">
+                    <h5>
+                        No Attendance Records
+                    </h5>
+                    <p class="text-muted">
+                        Your attendance records will appear here
+                        once staff members record attendance for you.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>
+                                    Project
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Hours Worked
+                                </th>
+                                <th>
+                                    Recorded By
+                                </th>
+                                <th>
+                                    Verification
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var attendance in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            @attendance.ProjectName
+                                        </strong>
+                                        <br />
+                                        <small class="text-muted">
+                                            Project ID:
+                                            @attendance.ProjectId
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @attendance.AttendanceDate.ToString("dd MMM yyyy")
+                                    </td>
+                                    <td>
+                                        @if (attendance.Status == "PRESENT")
+                                        {
+                                            <span class="badge bg-success">
+                                                PRESENT
+                                            </span>
+                                        }
+                                        else if (attendance.Status == "ABSENT")
+                                        {
+                                            <span class="badge bg-danger">
+                                                ABSENT
+                                            </span>
+                                        }
+                                        else if (attendance.Status == "LATE")
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                LATE
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @attendance.Status
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (attendance.HoursWorked.HasValue)
+                                        {
+                                            <strong>
+                                                @attendance.HoursWorked.Value.ToString("0.00")
+                                            </strong>
+                                            <span class="text-muted">
+                                                hours
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not recorded
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(attendance.StaffName))
+                                        {
+                                            @attendance.StaffName
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Unknown
+                                            </span>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (attendance.Verified)
+                                        {
+                                            <span class="badge bg-success">
+
+                                                ✓ Verified
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Not Verified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (attendance.Verified)
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-success"
+                                                    disabled>
+                                                ✓ Hours Verified
+                                            </button>
+                                        }
+                                        else if (attendance.HoursWorked.HasValue)
+                                        {
+                                            <form asp-controller="VolunteerAttendance"
+                                                  asp-action="VerifyHours"
+                                                  method="post"
+                                                  class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@attendance.AttId" />
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-primary"
+                                                        onclick="return confirm('Are you sure the recorded hours are correct?');">
+                                                    Verify Hours
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-secondary"
+                                                    disabled>
+                                                Hours Not Recorded
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4 mb-5">
+        <a asp-controller="Volunteer"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>

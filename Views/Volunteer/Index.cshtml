@@ -1,0 +1,214 @@
+﻿@{
+    ViewData["Title"] = "Volunteer Dashboard";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- DASHBOARD HEADER -->
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Volunteer Portal
+                </div>
+
+                <h1 class="mb-2">Volunteer Dashboard</h1>
+
+                <p class="mb-2">
+                    Welcome back,
+                    <strong>@ViewBag.FirstName @ViewBag.LastName</strong>
+                </p>
+
+                <p class="mb-0">
+                    Volunteer ID: <strong>@ViewBag.Vid</strong>
+                </p>
+            </div>
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a asp-controller="Account"
+                   asp-action="Logout"
+                   class="btn btn-danger px-4">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORGANIZATION -->
+    @if (ViewBag.Organization != null)
+    {
+        var organization = ViewBag.Organization;
+
+        <div class="card vh-organization-card mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="small text-uppercase fw-semibold mb-2"
+                             style="color: #2F5DA8; letter-spacing: 0.8px;">
+                            NGO You Are Volunteering For
+                        </div>
+
+                        <h3 class="mb-2">@organization.OrgName</h3>
+                    </div>
+
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a asp-controller="VolunteerOrganization"
+                           asp-action="Index"
+                           class="btn btn-outline-primary px-4">
+                            View Organization
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- PROFILE -->
+    <div class="card vh-cream-panel mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <span class="badge bg-primary mb-2">
+                        MY ACCOUNT
+                    </span>
+
+                    <h4 class="mb-2">My Profile</h4>
+
+                    <p class="text-muted mb-0">
+                        View and update your personal information,
+                        address and skills.
+                    </p>
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a asp-controller="Volunteer"
+                       asp-action="Profile"
+                       class="btn btn-primary px-4">
+                        View My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOLUNTEER OVERVIEW -->
+    <div class="mb-3">
+        <h4 class="fw-bold" style="color: #0C1F3F;">
+            My Volunteer Activities
+        </h4>
+
+        <p class="text-muted">
+            Access your projects, attendance records, certificates and communication.
+        </p>
+    </div>
+
+    <div class="row">
+
+        <!-- MY PROJECTS -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body">
+                    <span class="badge bg-primary px-3 py-2 mb-3">
+                        PROJECTS
+                    </span>
+
+                    <h5 class="card-title">My Projects</h5>
+
+                    <p class="text-muted">
+                        View and explore available projects.
+                    </p>
+
+                    <a asp-controller="VolunteerProjects"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY ATTENDANCE -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body">
+                    <span class="badge bg-secondary px-3 py-2 mb-3">
+                        ATTENDANCE
+                    </span>
+
+                    <h5 class="card-title">My Attendance</h5>
+
+                    <p class="text-muted">
+                        View your attendance and hours worked.
+                    </p>
+
+                    <a asp-controller="VolunteerAttendance"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY CERTIFICATES -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body">
+                    <span class="badge bg-primary px-3 py-2 mb-3">
+                        ACHIEVEMENTS
+                    </span>
+
+                    <h5 class="card-title">My Certificates</h5>
+
+                    <p class="text-muted">
+                        View certificates earned from your completed projects.
+                    </p>
+
+                    <a asp-controller="VolunteerCertificates"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Certificates
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW COMMUNICATION -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card vh-dashboard-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary px-3 py-2">
+                            COMMUNICATION
+                        </span>
+                    </div>
+
+                    <div class="vh-dashboard-number"
+                         aria-hidden="true">
+                        &nbsp;
+                    </div>
+
+                    <h5 class="card-title mt-2">
+                        View Communication
+                    </h5>
+
+                    <p class="text-muted">
+                        Read announcements shared by your organization.
+                    </p>
+
+                    <a asp-controller="VolunteerCommunication"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        View Communication
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-4 mb-5">
+        <p class="text-muted">VolunteerHub Volunteer Portal</p>
+    </div>
+</div>

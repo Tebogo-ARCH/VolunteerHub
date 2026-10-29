@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - VolunteerHub</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Main VolunteerHub stylesheet -->
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <!-- VolunteerHub generated styles -->
+    <link rel="stylesheet"
+          href="~/VolunteerHub.styles.css"
+          asp-append-version="true" />
+
+</head>
+
+<body class="vh-app">
+
+    <!-- ===================================================== -->
+    <!-- NAVIGATION -->
+    <!-- ===================================================== -->
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg vh-navbar">
+
+            <div class="container-fluid px-4">
+
+                <!-- BRAND -->
+                <a class="navbar-brand vh-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <span class="vh-brand-mark">
+                        VH
+                    </span>
+
+                    <span>
+                        VolunteerHub
+                    </span>
+
+                </a>
+
+
+                <!-- MOBILE MENU BUTTON -->
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+
+                <!-- NAVIGATION -->
+                <div class="collapse navbar-collapse"
+                     id="mainNavbar">
+
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                        <li class="nav-item">
+
+                            <a class="nav-link vh-nav-link"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Index">
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link vh-nav-link"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Privacy">
+
+                                Privacy
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main role="main" class="vh-main">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- ===================================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================================== -->
+
+    <footer class="vh-footer">
+
+        <div class="container text-center">
+
+            <div class="vh-footer-brand">
+                VolunteerHub
+            </div>
+
+            <div class="vh-footer-text">
+
+                &copy; 2026 VolunteerHub
+
+                <span class="mx-2">|</span>
+
+                <a asp-area=""
+                   asp-controller="Home"
+                   asp-action="Privacy">
+
+                    Privacy
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ===================================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ===================================================== -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

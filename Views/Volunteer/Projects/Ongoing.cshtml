@@ -1,0 +1,111 @@
+﻿@model List<VolunteerHub.Models.ViewModels.VolunteerProjectViewModel>
+
+@{
+    ViewData["Title"] = "Ongoing Projects";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Ongoing Projects</h1>
+            <p class="text-muted mb-0">
+                Projects you have been accepted into that are currently in progress.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to My Projects
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-1">@ViewBag.FirstName @ViewBag.LastName</h4>
+            <p class="text-muted mb-0">
+                Volunteer ID: <strong>@ViewBag.Vid</strong>
+            </p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var project in Model)
+            {
+                <div class="col-md-6 col-xl-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <h4 class="card-title mb-3">
+                                @project.ProjectName
+                            </h4>
+
+                            <span class="badge bg-primary align-self-start mb-3">
+                                Ongoing
+                            </span>
+
+                            @if (!string.IsNullOrWhiteSpace(project.OrganizationName))
+                            {
+                                <p class="mb-2">
+                                    <strong>Organization:</strong><br />
+                                    @project.OrganizationName
+                                </p>
+                            }
+
+                            <p class="text-muted">
+                                @(string.IsNullOrWhiteSpace(project.Description)
+                                    ? "No description provided."
+                                    : project.Description)
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Start date:</strong>
+                                @project.StartDate.ToString("dd MMM yyyy")
+                            </p>
+
+                            @if (project.EndDate.HasValue)
+                            {
+                                <p class="mb-2">
+                                    <strong>End date:</strong>
+                                    @project.EndDate.Value.ToString("dd MMM yyyy")
+                                </p>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(project.Location))
+                            {
+                                <p class="mb-3">
+                                    <strong>Location:</strong>
+                                    @project.Location
+                                </p>
+                            }
+
+                            <div class="mt-auto pt-3">
+                                <a asp-controller="VolunteerProjects"
+                                   asp-action="Details"
+                                   asp-route-id="@project.ProjectId"
+                                   class="btn btn-outline-primary w-100">
+                                    View Project Details
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h4>No Ongoing Projects</h4>
+                <p class="text-muted mb-0">
+                    You are not currently involved in any ongoing projects.
+                </p>
+            </div>
+        </div>
+    }
+
+</div>

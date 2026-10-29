@@ -1,0 +1,444 @@
+﻿@model List<VolunteerHub.Models.ViewModels.VolunteerCertificateViewModel>
+@{
+    ViewData["Title"] = "My Certificates";
+}
+<style>
+    :root {
+        --vh-cream: #FFF1E8;
+        --vh-light-blue: #8FAADC;
+        --vh-blue: #2F5DA8;
+        --vh-navy: #0C1F3F;
+    }
+
+    /*PAGE*/
+
+    .certificate-page {
+        min-height: 100vh;
+        padding: 40px 25px;
+        background: #f4f7fb;
+    }
+
+    /*HEADER*/
+
+    .certificate-header {
+        max-width: 1150px;
+        margin: 0 auto 35px;
+        padding: 35px;
+        text-align: center;
+        background: linear-gradient( 135deg, var(--vh-navy), var(--vh-blue) );
+        border-radius: 4px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(12, 31, 63, 0.18);
+    }
+
+        .certificate-header h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 42px;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .certificate-header p {
+            margin: 10px 0 0;
+            color: var(--vh-cream);
+            font-size: 17px;
+        }
+
+    .certificate-count {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 7px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: white;
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+
+    /*CERTIFICATE GRID*/
+
+    .certificate-grid {
+        max-width: 1150px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat( auto-fit, minmax(430px, 1fr) );
+        gap: 30px;
+    }
+
+    /*CERTIFICATE CARD*/
+
+    .certificate-card {
+        position: relative;
+        overflow: hidden;
+        background: #f7f9fc;
+        border: 1px solid #aebecd;
+        padding: 8px;
+        box-shadow: 0 8px 25px rgba(12, 31, 63, 0.10);
+    }
+
+    .certificate-inner {
+        position: relative;
+        border: 1px solid #aebecd;
+        padding: 30px;
+        min-height: 480px;
+        background: #f7f9fc;
+    }
+
+    /*BLUE DECORATIVE CORNERS*/
+
+    .certificate-corner {
+        position: absolute;
+        width: 130px;
+        height: 80px;
+        background: var(--vh-blue);
+        opacity: 0.95;
+    }
+
+        .certificate-corner.top-left {
+            top: -45px;
+            left: -45px;
+            border-radius: 0 0 100% 0;
+        }
+
+        .certificate-corner.bottom-right {
+            right: -45px;
+            bottom: -45px;
+            border-radius: 100% 0 0 0;
+        }
+
+    .certificate-corner-line {
+        position: absolute;
+        width: 150px;
+        height: 90px;
+        border: 3px solid var(--vh-light-blue);
+        opacity: 0.8;
+    }
+
+        .certificate-corner-line.top-left {
+            top: -52px;
+            left: -52px;
+            border-radius: 0 0 100% 0;
+        }
+
+        .certificate-corner-line.bottom-right {
+            right: -52px;
+            bottom: -52px;
+            border-radius: 100% 0 0 0;
+        }
+
+    /*CERTIFICATE CONTENT*/
+
+    .certificate-content {
+        position: relative;
+        z-index: 5;
+        text-align: center;
+    }
+
+    .certificate-brand {
+        font-size: 12px;
+        letter-spacing: 3px;
+        font-weight: 700;
+        color: var(--vh-blue);
+        margin-bottom: 18px;
+    }
+
+    .certificate-title {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 37px;
+        font-weight: 400;
+        letter-spacing: 2px;
+        color: #101820;
+    }
+
+    .certificate-subtitle {
+        margin-top: 4px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 7px;
+        color: #101820;
+    }
+
+    .certificate-divider {
+        margin: 15px auto;
+        color: var(--vh-blue);
+        font-size: 20px;
+    }
+
+    .presented-text {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        color: #30353a;
+    }
+
+    .volunteer-name {
+        margin-top: 15px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 30px;
+        font-style: italic;
+        color: #101820;
+    }
+
+    .name-line {
+        width: 75%;
+        margin: 5px auto 15px;
+        border-bottom: 1px solid #aebecd;
+    }
+
+    .certificate-description {
+        max-width: 550px;
+        margin: 0 auto;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #444;
+    }
+
+    .certificate-project {
+        margin-top: 13px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--vh-blue);
+    }
+
+    .certificate-details {
+        display: flex;
+        justify-content: center;
+        gap: 35px;
+        margin-top: 13px;
+        font-size: 11px;
+        color: #555;
+    }
+
+    /*DOWNLOAD BUTTON*/
+
+    .certificate-actions {
+        margin-top: 22px;
+        text-align: center;
+    }
+
+    .download-button {
+        display: inline-block;
+        padding: 10px 25px;
+        background: var(--vh-blue);
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+        .download-button:hover {
+            background: var(--vh-navy);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    /*EMPTY STATE*/
+
+    .empty-certificates {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 60px 30px;
+        text-align: center;
+        background: white;
+        border: 1px solid #dce2e8;
+        box-shadow: 0 8px 25px rgba(12, 31, 63, 0.08);
+    }
+
+        .empty-certificates h3 {
+            color: var(--vh-navy);
+        }
+
+        .empty-certificates p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+    .back-button {
+        display: inline-block;
+        padding: 10px 22px;
+        background: var(--vh-blue);
+        color: white;
+        text-decoration: none;
+    }
+
+        .back-button:hover {
+            background: var(--vh-navy);
+            color: white;
+        }
+
+    /*MOBILE*/
+
+    @@media (max-width: 600px) {
+
+        .certificate-page {
+            padding: 20px 10px;
+        }
+
+        .certificate-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .certificate-inner {
+            padding: 20px;
+        }
+
+        .certificate-title {
+            font-size: 30px;
+        }
+
+        .certificate-subtitle {
+            font-size: 15px;
+            letter-spacing: 4px;
+        }
+
+        .volunteer-name {
+            font-size: 25px;
+        }
+
+        .certificate-details {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+
+</style>
+
+<div class="certificate-page">
+
+    <!--PAGE HEADER-->
+
+    <div class="certificate-header">
+        <h1>
+            My Certificates
+        </h1>
+        <p>
+            @ViewBag.FirstName @ViewBag.LastName
+        </p>
+        <div class="certificate-count">
+            @Model.Count
+            @(Model.Count == 1 ? "CERTIFICATE" : "CERTIFICATES")
+        </div>
+    </div>
+
+    <!--CERTIFICATES-->
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="certificate-grid">
+            @foreach (var certificate in Model)
+            {
+                <div class="certificate-card">
+                    <div class="certificate-inner">
+
+                        <div class="certificate-corner top-left"></div>
+                        <div class="certificate-corner-line top-left"></div>
+                        <div class="certificate-corner bottom-right"></div>
+                        <div class="certificate-corner-line bottom-right"></div>
+
+                        @* the certificate content *@
+
+                        <div class="certificate-content">
+                            <div class="certificate-brand">
+                                VOLUNTEERHUB
+                            </div>
+                            <h2 class="certificate-title">
+                                CERTIFICATE
+                            </h2>
+                            <div class="certificate-subtitle">
+                                OF ACHIEVEMENT
+                            </div>
+                            <div class="certificate-divider">
+                                ✦
+                            </div>
+                            <div class="presented-text">
+                                THIS CERTIFICATE IS PROUDLY PRESENTED TO
+                            </div>
+                            <div class="volunteer-name">
+                                @ViewBag.FirstName @ViewBag.LastName
+                            </div>
+                            <div class="name-line"></div>
+                            @if (!string.IsNullOrWhiteSpace(
+                                certificate.Description))
+                            {
+                                <div class="certificate-description">
+                                    @certificate.Description
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="certificate-description">
+                                    For dedicated volunteer service
+                                    and valuable contribution.
+                                </div>
+                            }
+                            <div class="certificate-project">
+                                @certificate.ProjectName
+                            </div>
+                            <div class="certificate-details">
+                                <span>
+                                    <strong>Volunteer ID:</strong>
+                                    @certificate.VolunteerId
+                                </span>
+                                <span>
+                                    <strong>Issued:</strong>
+                                    @if (certificate.IssuedDate.HasValue)
+                                    {
+                                        @certificate.IssuedDate.Value.ToString("dd MMMM yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Date not specified
+                                        </span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="certificate-actions">
+
+                                <a asp-controller="VolunteerCertificates"
+                                   asp-action="Download"
+                                   asp-route-id="@certificate.CertId"
+                                   class="download-button">
+
+                                    Download Certificate
+
+                                </a>
+
+                            </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-certificates">
+            <h3>
+                No Certificates Yet
+            </h3>
+            <p>
+                You do not have any certificates available yet.
+                Once a certificate is issued for your completed
+                volunteer work, it will appear here.
+            </p>
+            <a asp-controller="Volunteer"
+               asp-action="Index"
+               class="back-button">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    <div class="mb-5">
+        <a asp-controller="Volunteer"
+           asp-action="Index"
+           class="btn btn-primary">
+            Back to Volunteer Dashboard
+        </a>
+    </div>
+</div>

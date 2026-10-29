@@ -1,0 +1,73 @@
+﻿
+@model VolunteerHub.Models.Announcement
+
+@{
+    ViewData["Title"] = "Announcement Details";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="vh-dashboard-header mb-4 p-4">
+        <span class="badge bg-light text-dark mb-2">
+            COMMUNICATION
+        </span>
+
+        <h1 class="mb-2">Announcement Details</h1>
+
+        <p class="mb-0">
+            Read the complete announcement below.
+        </p>
+    </div>
+
+    <div class="card vh-dashboard-card">
+        <div class="card-body p-4">
+
+            <span class="badge bg-secondary mb-3">
+                ANNOUNCEMENT
+            </span>
+
+            <h2 class="mb-4">
+                @Model.Title
+            </h2>
+
+            <div class="mb-4">
+                <h6 class="text-muted">Organization</h6>
+                <p>@ViewBag.OrganizationName</p>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="text-muted">Date Created</h6>
+                <p>
+                    @(Model.CreatedAt?.ToString("dd MMMM yyyy, HH:mm")
+                        ?? "Date unavailable")
+                </p>
+            </div>
+
+            <hr />
+
+            <div class="mb-4">
+                <h5 class="mb-3">Announcement Message</h5>
+
+                <div style="white-space: pre-wrap; overflow-wrap: anywhere;">@Model.Content</div>
+            </div>
+
+            <hr />
+
+            <div class="d-flex gap-2 flex-wrap">
+                <a asp-controller="ManagerCommunication"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Back to Announcements
+                </a>
+
+                <a asp-controller="ManagerCommunication"
+                   asp-action="Create"
+                   class="btn btn-primary">
+                    Send Another Communication
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,172 @@
+﻿@model List<VolunteerHub.Models.ViewModels.VolunteerProjectViewModel>
+
+@{
+    ViewData["Title"] = "My Projects";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">
+                My Projects
+            </h1>
+
+            <p class="text-muted mb-0">
+                Explore upcoming, ongoing and completed volunteer projects.
+            </p>
+        </div>
+
+        <a asp-controller="Volunteer"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <!-- VOLUNTEER INFORMATION -->
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+                    <h4 class="mb-1">
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Volunteer ID:
+                        <strong>@ViewBag.Vid</strong>
+                    </p>
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-primary fs-6">
+                        Volunteer
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT CATEGORY CARDS -->
+
+    <div class="row g-4">
+
+        <!-- UPCOMING PROJECTS CARD -->
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column p-4">
+
+                    <h4 class="card-title mb-3">
+                        Upcoming Projects
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Discover projects that are being planned
+                        and find opportunities to get involved.
+                    </p>
+
+                    <div class="mt-auto">
+                        <a asp-controller="VolunteerProjects"
+                           asp-action="Upcoming"
+                           class="btn btn-outline-primary w-100">
+                            Explore Upcoming Projects
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGOING PROJECTS CARD -->
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column p-4">
+
+                    <h4 class="card-title mb-3">
+                        Ongoing Projects
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        View projects currently in progress and
+                        see where your volunteering can make a difference.
+                    </p>
+
+                    <div class="mt-auto">
+                        <a asp-controller="VolunteerProjects"
+                           asp-action="Ongoing"
+                           class="btn btn-outline-primary w-100">
+                            View Ongoing Projects
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLETED PROJECTS CARD -->
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column p-4">
+
+                    <h4 class="card-title mb-3">
+                        Completed Projects
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Explore projects that have been completed
+                        and see the impact of volunteer contributions.
+                    </p>
+
+                    <div class="mt-auto">
+                        <a asp-controller="VolunteerProjects"
+                           asp-action="Completed"
+                           class="btn btn-outline-primary w-100">
+                            View Completed Projects
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Canceled Projects Card -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+
+                    <h4 class="card-title mb-3">
+                        Canceled Projects
+                    </h4>
+
+                    <p class="text-muted">
+                        View projects you applied for or were assigned to
+                        that were later canceled.
+                    </p>
+
+                    <div class="mt-auto pt-3">
+                        <a asp-controller="VolunteerProjects"
+                           asp-action="Canceled"
+                           class="btn btn-outline-danger w-100">
+                            View Canceled Projects
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>

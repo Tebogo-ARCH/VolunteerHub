@@ -1,0 +1,182 @@
+﻿@model List<VolunteerHub.Models.Volunteer>
+@{
+    ViewData["Title"] = "Volunteers";
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+    
+    <div class="text-center mb-5">
+        <h1>Volunteers</h1>
+        <p class="lead">
+            Volunteers in your organization
+        </p>
+        <p>
+            Staff:
+            <strong>
+                @ViewBag.FirstName @ViewBag.LastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- search box-->
+    
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <input type="text"
+                   id="volunteerSearch"
+                   class="form-control"
+                   placeholder="Search volunteers or skills..."
+                   onkeyup="searchVolunteers()" />
+        </div>
+    </div>
+
+    <!-- VOLUNTEERS TABLE -->
+    
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover"
+                           id="volunteersTable">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>
+                                    Volunteer ID
+                                </th>
+                                <th>
+                                    First Name
+                                </th>
+                                <th>
+                                    Last Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Phone
+                                </th>
+                                <th>
+                                    Skills
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var volunteer in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @volunteer.Vid
+                                    </td>
+                                    <td>
+                                        @volunteer.PidNavigation.FirstName
+                                    </td>
+                                    <td>
+                                        @volunteer.PidNavigation.LastName
+                                    </td>
+                                    <td>
+                                        @volunteer.PidNavigation.Email
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(
+                                            volunteer.PidNavigation.Phone))
+                                        {
+                                            @volunteer.PidNavigation.Phone
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (volunteer.VolunteerSkills != null &&
+                                             volunteer.VolunteerSkills.Any())
+                                        {
+                                            foreach (var volunteerSkill
+                                                in volunteer.VolunteerSkills)
+                                            {
+                                                <span class="badge bg-info text-dark me-1 mb-1">
+                                                    @volunteerSkill.Skill.SkillName
+                                                </span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                No skills recorded
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(
+                                            volunteer.PidNavigation.Status))
+                                        {
+                                            <span class="badge bg-success">
+                                                @volunteer.PidNavigation.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body text-center p-5">
+                <h3>
+                    No Volunteers Found
+                </h3>
+                <p class="text-muted">
+                    There are currently no volunteers
+                    in your organization.
+                </p>
+            </div>
+        </div>
+    }
+    <div class="text-center mt-4 mb-5"
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+<script>
+    function searchVolunteers() {
+        var input =
+            document.getElementById("volunteerSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("volunteersTable");
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

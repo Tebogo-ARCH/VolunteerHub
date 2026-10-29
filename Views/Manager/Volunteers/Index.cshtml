@@ -1,0 +1,197 @@
+﻿@model List<VolunteerHub.Models.Volunteer>
+@{
+    ViewData["Title"] = "My Volunteers";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    My Volunteers
+                </h1>
+                <p class="mb-2">
+                    Volunteers working with your organization.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH BOX -->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <label for="volunteerSearch"
+                   class="form-label">
+                Search Volunteers
+            </label>
+            <input type="text"
+                   id="volunteerSearch"
+                   class="form-control"
+                   placeholder="Search by volunteer name, ID..."
+                   onkeyup="searchVolunteers()" />
+        </div>
+    </div>
+
+    <!-- VOLUNTEER TABLE -->
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        Organization Volunteers
+                    </span>
+                    <span class="badge bg-light text-dark">
+                        @Model.Count Volunteer(s)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle"
+                           id="volunteerTable">
+                        <thead>
+                            <tr>
+                                <th>Volunteer ID</th>
+                                <th>Volunteer</th>
+                                <th>Person ID</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var volunteer in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fw-semibold">
+                                            @volunteer.Vid
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @volunteer.PidNavigation.FirstName
+                                            @volunteer.PidNavigation.LastName
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @volunteer.Pid
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(volunteer.PidNavigation.Email))
+                                        {
+                                            @volunteer.PidNavigation.Email
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(volunteer.PidNavigation.Phone))
+                                        {
+                                            @volunteer.PidNavigation.Phone
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(volunteer.PidNavigation.Status))
+                                        {
+                                            <span class="badge bg-primary">
+                                                @volunteer.PidNavigation.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="ManagerVolunteer"
+                                           asp-action="Details"
+                                           asp-route-id="@volunteer.Vid"
+                                           class="btn btn-sm btn-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="vh-empty-state">
+            <h3>
+                No Volunteers Found
+            </h3>
+            <p class="text-muted mb-4">
+                Your organization does not have any volunteers yet.
+            </p>
+        </div>
+    }
+
+    <div class="text-center mt-4 mb-4">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- SEARCH SCRIPT -->
+
+<script>
+    function searchVolunteers() {
+        var input =
+            document.getElementById("volunteerSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("volunteerTable");
+        if (!table) {
+            return;
+        }
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

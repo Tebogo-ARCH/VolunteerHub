@@ -1,0 +1,38 @@
+﻿@model IEnumerable<VolunteerHub.Models.Organization>
+
+@{
+    ViewData["Title"] = "Organizations";
+}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">Organizations</h1>
+
+    <div class="row">
+
+        @foreach (var organization in Model)
+        {
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+                            @organization.OrgName
+                        </h4>
+
+                        <p class="card-text">
+                            @organization.Description
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

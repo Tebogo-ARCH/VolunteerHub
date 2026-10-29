@@ -1,0 +1,492 @@
+﻿@using VolunteerHub.Controllers
+@model VolunteerHub.Models.Project
+@{
+    ViewData["Title"] = "Project Completion";
+    var volunteerRows =
+        ViewBag.VolunteerRows as List<StaffCompletionRow>
+        ?? new List<StaffCompletionRow>();
+    bool projectReady =
+        ViewBag.ProjectReadyForManager != null
+        && (bool)ViewBag.ProjectReadyForManager;
+}
+<div class="container mt-5 mb-5">
+
+         <!--HEADER-->
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">
+            Project Completion
+        </h1>
+        <p class="lead text-muted">
+            Review volunteer attendance and completion status.
+        </p>
+        <p class="mb-1">
+            Staff:
+            <strong>
+                @ViewBag.FirstName @ViewBag.LastName
+            </strong>
+        </p>
+        <p class="text-muted">
+            Project ID:
+            <strong>@Model.ProjectId</strong>
+        </p>
+    </div>
+
+    <!--success & error messages-->
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm"
+             role="alert">
+            <strong>Success:</strong>
+            @TempData["SuccessMessage"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm"
+             role="alert">
+            <strong>Cannot complete:</strong>
+            @TempData["ErrorMessage"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+
+    <!--PROJECT INFORMATION-->
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <small class="text-muted">
+                        PROJECT
+                    </small>
+                    <h3 class="fw-bold mb-0">
+                        @Model.ProjectName
+                    </h3>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <small class="text-muted">
+                        STATUS
+                    </small>
+                    <div>
+                        @if (string.Equals(
+                            Model.Status,
+                            "COMPLETED",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-success fs-6">
+                                COMPLETED
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary fs-6">
+                                @Model.Status
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <small class="text-muted">
+                        LOCATION
+                    </small>
+                    <div class="fw-semibold">
+                        @if (!string.IsNullOrWhiteSpace(Model.Location))
+                        {
+                            @Model.Location
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not specified
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        START DATE
+                    </small>
+                    <div class="fw-semibold">
+                        @Model.StartDate
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        END DATE
+                    </small>
+                    <div class="fw-semibold">
+                        @if (Model.EndDate.HasValue)
+                        {
+                            @Model.EndDate.Value
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not specified
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--PROJECT READINESS-->
+
+    @if (projectReady)
+    {
+        <div class="alert alert-success shadow-sm">
+            <div class="d-flex align-items-start">
+                <div class="me-3">
+                    <span class="fs-3">
+                        ✓
+                    </span>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        Project Ready for Manager Review
+                    </h5>
+                    <p class="mb-0">
+                        All non-declined volunteer assignments have been
+                        completed and their attendance hours have been
+                        verified.
+                    </p>
+                    <p class="mb-0 mt-2">
+                        The project has <strong>not</strong> been marked
+                        COMPLETED automatically. The manager will review
+                        and complete the project.
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning shadow-sm">
+            <div class="d-flex align-items-start">
+                <div class="me-3">
+                    <span class="fs-3">
+                        !
+                    </span>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        Project Not Ready for Manager Review
+                    </h5>
+                    <p class="mb-0">
+                        Some volunteer assignments still need attendance
+                        verification or completion.
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <!--VOLUNTEER COMPLETION TABLE-->
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                Volunteer Completion
+            </h4>
+        </div>
+        <div class="card-body p-0">
+            @if (volunteerRows.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>
+                                    Volunteer
+                                </th>
+                                <th>
+                                    VID
+                                </th>
+                                <th>
+                                    Assignment Status
+                                </th>
+                                <th>
+                                    Attendance
+                                </th>
+                                <th>
+                                    Verified
+                                </th>
+                                <th>
+                                    Total Hours
+                                </th>
+                                <th>
+                                    Completion
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var volunteer in volunteerRows)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        <strong>
+                                            @volunteer.VolunteerName
+                                        </strong>
+                                    </td>
+                                    <td class="align-middle">
+                                        @volunteer.Vid
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (string.Equals(
+                                            volunteer.AssignmentStatus,
+                                            "COMPLETED",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-success">
+                                                COMPLETED
+                                            </span>
+                                        }
+                                        else if (string.Equals(
+                                            volunteer.AssignmentStatus,
+                                            "ACCEPTED",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-primary">
+                                                ACCEPTED
+                                            </span>
+                                        }
+                                        else if (string.Equals(
+                                            volunteer.AssignmentStatus,
+                                            "IN_PROGRESS",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-info text-dark">
+                                                IN PROGRESS
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @volunteer.AssignmentStatus
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (volunteer.HasAttendance)
+                                        {
+                                            <span class="text-success fw-semibold">
+                                                @volunteer.AttendanceCount
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">
+                                                No records
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (volunteer.HasAttendance)
+                                        {
+                                            <span>
+                                                @volunteer.VerifiedAttendanceCount
+                                                /
+                                                @volunteer.AttendanceCount
+                                            </span>
+                                            @if (volunteer.AllHoursVerified)
+                                            {
+                                                <span class="badge bg-success ms-1">
+                                                    Verified
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark ms-1">
+                                                    Waiting
+                                                </span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <strong>
+                                            @volunteer.TotalHours.ToString("0.00")
+                                        </strong>
+                                        hrs
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (string.Equals(
+                                            volunteer.AssignmentStatus,
+                                            "COMPLETED",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-success">
+                                                Completed
+                                            </span>
+                                        }
+                                        else if (volunteer.AllHoursVerified)
+                                        {
+                                            <span class="badge bg-info text-dark">
+                                                Ready
+                                            </span>
+                                        }
+                                        else if (!volunteer.HasAttendance)
+                                        {
+                                            <span class="badge bg-danger">
+                                                No Attendance
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Waiting for Verification
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="align-middle">
+                                        @if (volunteer.CanMarkCompleted)
+                                        {
+                                            <form asp-controller="StaffAttendance"
+                                                  asp-action="CompleteAssignment"
+                                                  method="post"
+                                                  class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@volunteer.AssignId" />
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-success"
+                                                        onclick="return confirm('Are you sure you want to mark this volunteer as COMPLETED?');">
+                                                    Mark Completed
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (string.Equals(
+                                            volunteer.AssignmentStatus,
+                                            "COMPLETED",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="text-success fw-semibold">
+                                                Completed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not ready
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center p-5">
+                    <h4>
+                        No Volunteers Found
+                    </h4>
+                    <p class="text-muted mb-0">
+                        There are currently no active volunteer
+                        assignments for you on this project.
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <!--rules to guide staff-->
+
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-body">
+            <h5 class="fw-bold">
+                Completion Rules
+            </h5>
+            <ul class="mb-0">
+                <li>
+                    Staff records the volunteer's attendance and hours.
+                </li>
+                <li>
+                    The volunteer must verify the recorded hours.
+                </li>
+                <li>
+                    Every attendance record must be verified.
+                </li>
+                <li>
+                    A volunteer cannot be marked COMPLETED without
+                    verified attendance.
+                </li>
+                <li>
+                    Once all volunteers are completed, the project
+                    becomes ready for manager review.
+                </li>
+                <li>
+                    The manager will make the final decision to mark
+                    the project COMPLETED.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="StaffAttendance"
+           asp-action="Index"
+           class="btn btn-secondary me-2">
+            Back to Projects
+        </a>
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-primary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+
+
+<style>
+    body {
+        background-color: #f7f9fc;
+    }
+    .card {
+        border-radius: 12px;
+    }
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+    .table th {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .badge {
+        font-size: 0.82rem;
+        padding: 0.5em 0.7em;
+    }
+</style>

@@ -1,0 +1,229 @@
+﻿@model VolunteerHub.Models.ViewModels.StaffProjectAssignmentViewModel
+@{
+    ViewData["Title"] = "Assign Volunteers";
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+
+    <div class="text-center mb-5">
+        <h1>Assign Volunteers</h1>
+        <p class="lead">
+            Select volunteers for this project
+        </p>
+        <p>
+            Staff:
+            <strong>
+                @Model.FirstName @Model.LastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- PROJECT INFORMATION -->
+    
+    <div class="card shadow mb-4">
+        <div class="card-header text-center">
+            <h2>
+                @Model.Project.ProjectName
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Project ID:</strong>
+                    <p>
+                        @Model.Project.ProjectId
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Location:</strong>
+                    <p>
+                        @if (!string.IsNullOrEmpty(Model.Project.Location))
+                        {
+                            @Model.Project.Location
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not specified
+                            </span>
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <hr />
+
+            <strong>Description:</strong>
+            <p>
+                @Model.Project.Description
+            </p>
+        </div>
+    </div>
+
+    <!-- ASSIGNMENT FORM -->
+    
+    <form asp-controller="StaffProjects"
+          asp-action="Assign"
+          method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden"
+               name="projectId"
+               value="@Model.Project.ProjectId" />
+
+        <div asp-validation-summary="All"
+             class="alert alert-danger">
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    Available Volunteers
+                </h4>
+            </div>
+
+            <div class="card-body">
+                @if (Model.Volunteers != null &&
+                     Model.Volunteers.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>
+                                        Select
+                                    </th>
+                                    <th>
+                                        Volunteer Name
+                                    </th>
+                                    <th>
+                                        Skills
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var volunteer in Model.Volunteers)
+                                {
+                                    var isAssigned =
+                                        Model.AssignedVolunteerIds
+                                            .Contains(volunteer.Vid);
+                                    <tr>
+                                        <td class="text-center">
+                                            @if (isAssigned)
+                                            {
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       disabled />
+                                                <br />
+                                                <small class="text-success">
+                                                    Already Assigned
+                                                </small>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       name="volunteerIds"
+                                                       value="@volunteer.Vid"
+                                                @(Model.SelectedVolunteerIds.Contains(volunteer.Vid)
+                                                    ? "checked"
+                                                    : "") />
+                                            }
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                @volunteer.PidNavigation.FirstName
+                                                @volunteer.PidNavigation.LastName
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            @if (volunteer.VolunteerSkills != null &&
+                                                 volunteer.VolunteerSkills.Any())
+                                            {
+                                                foreach (var volunteerSkill
+                                                    in volunteer.VolunteerSkills)
+                                                {
+                                                    <span class="badge bg-info text-dark me-1 mb-1">
+                                                        @volunteerSkill.Skill.SkillName
+                                                    </span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">
+                                                    No skills recorded
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (isAssigned)
+                                            {
+                                                <span class="badge bg-success">
+                                                    Assigned
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    Available
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @* tip for staff *@
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>Tip:</strong>
+                        Select one or more volunteers whose skills
+                        are relevant to this project.
+                    </div>
+
+                    @* buttons *@
+                    <div class="text-center mt-4">
+                        <button type="submit"
+                                class="btn btn-success me-2">
+                            Assign Selected Volunteers
+                        </button>
+                        <a asp-controller="StaffProjects"
+                           asp-action="Index"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-4">
+                        <h4>
+                            No Volunteers Available
+                        </h4>
+                        <p class="text-muted">
+                            There are no volunteers available
+                            in your organization.
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="StaffProjects"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Projects
+        </a>
+    </div>
+</div>

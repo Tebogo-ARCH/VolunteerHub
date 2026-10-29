@@ -1,0 +1,441 @@
+﻿@model VolunteerHub.Models.ViewModels.VolunteerRegistrationViewModel
+
+@{
+    ViewData["Title"] = "Create Volunteer Profile";
+}
+
+<div class="container mt-5 mb-5">
+
+    <!-- PAGE HEADER -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold" style="color: #0C1F3F;">
+            Create Volunteer Profile
+        </h1>
+
+        <p class="lead" style="color: #0C1F3F;">
+            Join an organization and become part of VolunteerHub.
+        </p>
+    </div>
+
+
+    <!-- REGISTRATION CARD -->
+    <div class="card shadow">
+
+        <div class="card-header table-primary">
+            <h4 class="mb-0">
+                Volunteer Registration
+            </h4>
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form asp-action="RegisterVolunteer"
+                  asp-controller="Account"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <!-- VALIDATION SUMMARY -->
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- PERSONAL DETAILS -->
+                <!-- ================================================= -->
+
+                <h5 class="fw-bold mb-3"
+                    style="color: #0C1F3F;">
+                    Personal Details
+                </h5>
+
+                <div class="row">
+
+                    <!-- FIRST NAME -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="FirstName"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="FirstName"
+                               class="form-control"
+                               placeholder="Enter your first name" />
+
+                        <span asp-validation-for="FirstName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="LastName"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="LastName"
+                               class="form-control"
+                               placeholder="Enter your last name" />
+
+                        <span asp-validation-for="LastName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- USERNAME -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="UserName"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="UserName"
+                               class="form-control"
+                               placeholder="Choose a username" />
+
+                        <span asp-validation-for="UserName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Email"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="Enter your email address" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Phone"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Phone"
+                               class="form-control"
+                               placeholder="Enter your phone number" />
+
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- ================================================= -->
+                <!-- ORGANIZATION -->
+                <!-- ================================================= -->
+
+                <h5 class="fw-bold mb-3"
+                    style="color: #0C1F3F;">
+                    Organization
+                </h5>
+
+                <div class="mb-4">
+
+                    <label asp-for="OrganizationId"
+                           class="form-label">
+                    </label>
+
+                    <select asp-for="OrganizationId"
+                            asp-items="Model.Organizations"
+                            class="form-select">
+
+                        <option value="">
+                            -- Select Organization --
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="OrganizationId"
+                          class="text-danger">
+                    </span>
+
+                    <div class="form-text">
+                        Select the organization you would like to
+                        volunteer with.
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- ================================================= -->
+                <!-- ADDRESS -->
+                <!-- ================================================= -->
+
+                <h5 class="fw-bold mb-3"
+                    style="color: #0C1F3F;">
+                    Address
+                </h5>
+
+                <div class="row">
+
+                    <!-- STREET -->
+
+                    <div class="col-md-8 mb-3">
+
+                        <label asp-for="StreetAddress"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="StreetAddress"
+                               class="form-control"
+                               placeholder="Enter street address" />
+
+                        <span asp-validation-for="StreetAddress"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- SUBURB -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label asp-for="Suburb"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Suburb"
+                               class="form-control"
+                               placeholder="Enter suburb" />
+
+                        <span asp-validation-for="Suburb"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- CITY -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label asp-for="City"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="City"
+                               class="form-control"
+                               placeholder="Enter city" />
+
+                        <span asp-validation-for="City"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PROVINCE -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label asp-for="Province"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Province"
+                               class="form-control"
+                               placeholder="Enter province" />
+
+                        <span asp-validation-for="Province"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- POSTAL CODE -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label asp-for="PostalCode"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="PostalCode"
+                               class="form-control"
+                               placeholder="Enter postal code" />
+
+                        <span asp-validation-for="PostalCode"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- ================================================= -->
+                <!-- SKILLS -->
+                <!-- ================================================= -->
+
+                <h5 class="fw-bold mb-3"
+                    style="color: #0C1F3F;">
+                    Volunteer Skills
+                </h5>
+
+                <div class="mb-4">
+
+                    <label asp-for="SelectedSkillIds"
+                           class="form-label">
+                        Select Your Skills
+                    </label>
+
+                    <select asp-for="SelectedSkillIds"
+                            asp-items="Model.Skills"
+                            class="form-select"
+                            multiple
+                            size="6">
+                    </select>
+
+                    <span asp-validation-for="SelectedSkillIds"
+                          class="text-danger">
+                    </span>
+
+                    <div class="form-text">
+                        Hold Ctrl on Windows or Command on Mac to
+                        select multiple skills.
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <!-- ================================================= -->
+                <!-- PASSWORD -->
+                <!-- ================================================= -->
+
+                <h5 class="fw-bold mb-3"
+                    style="color: #0C1F3F;">
+                    Account Security
+                </h5>
+
+                <div class="row">
+
+                    <!-- PASSWORD -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Password"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Password"
+                               class="form-control"
+                               placeholder="Create a password" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+
+                        <div class="form-text">
+                            Password must contain at least 6 characters.
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="ConfirmPassword"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="ConfirmPassword"
+                               class="form-control"
+                               placeholder="Confirm your password" />
+
+                        <span asp-validation-for="ConfirmPassword"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- BUTTONS -->
+                <!-- ================================================= -->
+
+                <div class="d-flex justify-content-between
+                    align-items-center mt-4">
+
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn btn-secondary">
+
+                        Back to Login
+
+                    </a>
+
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Create Profile
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

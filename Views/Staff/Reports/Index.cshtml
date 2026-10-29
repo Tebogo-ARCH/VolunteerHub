@@ -1,0 +1,188 @@
+﻿@model List<VolunteerHub.Models.Report>
+@{
+    ViewData["Title"] = "Reports";
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+   
+    <div class="text-center mb-5">
+        <h1>
+            Reports
+        </h1>
+        <p class="lead">
+            View reports submitted by volunteers
+        </p>
+        <p>
+            Staff:
+            <strong>
+                @ViewBag.FirstName @ViewBag.LastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- search box-->
+    
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <input type="text"
+                   id="reportSearch"
+                   class="form-control"
+                   placeholder="Search volunteer, project or status..."
+                   onkeyup="searchReports()" />
+        </div>
+    </div>
+
+    <!-- REPORTS TABLE -->
+    
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover"
+                           id="reportsTable">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>
+                                    Report ID
+                                </th>
+                                <th>
+                                    Volunteer
+                                </th>
+                                <th>
+                                    Project
+                                </th>
+                                <th>
+                                    Total Hours
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var report in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @report.ReportId
+                                    </td>
+                                    <td>
+                                        @if (report.VidNavigation != null &&
+                                             report.VidNavigation.PidNavigation != null)
+                                        {
+                                            <strong>
+                                                @report.VidNavigation.PidNavigation.FirstName
+                                                @report.VidNavigation.PidNavigation.LastName
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Volunteer information unavailable
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (report.Project != null)
+                                        {
+                                            <strong>
+                                                @report.Project.ProjectName
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Project information unavailable
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @report.TotalHours
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(report.Status))
+                                        {
+                                            @if (report.Status.ToUpper() == "COMPLETED")
+                                            {
+                                                <span class="badge bg-success">
+                                                    @report.Status
+                                                </span>
+                                            }
+                                            else if (report.Status.ToUpper() == "PENDING")
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    @report.Status
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-primary">
+                                                    @report.Status
+                                                </span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body text-center p-5">
+                <h3>
+                    No Reports Found
+                </h3>
+                <p class="text-muted">
+                    There are currently no reports submitted
+                    by volunteers in your organization.
+                </p>
+            </div>
+        </div>
+    }
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+<script>
+    function searchReports() {
+        var input =
+            document.getElementById("reportSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("reportsTable");
+        if (!table) {
+            return;
+        }
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

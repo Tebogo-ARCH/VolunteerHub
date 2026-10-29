@@ -1,0 +1,194 @@
+﻿@model List<VolunteerHub.Models.Staff>
+@{
+    ViewData["Title"] = "My Staff";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER-->
+
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    My Staff
+                </h1>
+                <p class="mb-2">
+                    Staff members working in your organization.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!--search box-->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <label for="staffSearch"
+                   class="form-label">
+                Search Staff
+            </label>
+            <input type="text"
+                   id="staffSearch"
+                   class="form-control"
+                   placeholder="Search by staff name, ID..."
+                   onkeyup="searchStaff()" />
+        </div>
+    </div>
+
+    <!-- STAFF TABLE-->
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        Organization Staff
+                    </span>
+                    <span class="badge bg-light text-dark">
+                        @Model.Count Staff Member(s)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle"
+                           id="staffTable">
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Staff Member</th>
+                                <th>Person ID</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var staff in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fw-semibold">
+                                            @staff.Sid
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @staff.PidNavigation.FirstName
+                                            @staff.PidNavigation.LastName
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @staff.Pid
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(staff.PidNavigation.Email))
+                                        {
+                                            @staff.PidNavigation.Email
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(staff.PidNavigation.Phone))
+                                        {
+                                            @staff.PidNavigation.Phone
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(staff.PidNavigation.Status))
+                                        {
+                                            <span class="badge bg-primary">
+                                                @staff.PidNavigation.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="ManagerStaff"
+                                           asp-action="Details"
+                                           asp-route-id="@staff.Sid"
+                                           class="btn btn-sm btn-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="vh-empty-state">
+            <h3>
+                No Staff Found
+            </h3>
+
+            <p class="text-muted mb-4">
+                Your organization does not have any staff members yet.
+            </p>
+        </div>
+    }
+    <div class="text-center mt-4 mb-4">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+<script>
+    function searchStaff() {
+        var input =
+            document.getElementById("staffSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("staffTable");
+        if (!table) {
+            return;
+        }
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

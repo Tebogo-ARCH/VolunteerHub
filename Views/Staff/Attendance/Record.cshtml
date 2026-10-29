@@ -1,0 +1,241 @@
+﻿@using VolunteerHub.Models
+@{
+    ViewData["Title"] = "Record Attendance";
+    var project = (Project)ViewBag.Project;
+    var volunteers =
+        (List<Volunteer>)ViewBag.Volunteers;
+    var selectedVolunteerIds =
+        ViewBag.SelectedVolunteerIds
+        as List<int>
+        ?? new List<int>();
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+    
+    <div class="text-center mb-5">
+        <h1>Record Attendance</h1>
+        <p class="lead">
+            Record attendance for the selected project
+        </p>
+        <p>
+            Staff:
+            <strong>
+                @ViewBag.FirstName @ViewBag.LastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- PROJECT INFORMATION -->
+
+    <div class="card shadow mb-4">
+        <div class="card-header text-center">
+            <h2>
+                @project.ProjectName
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Project ID</strong>
+                    <p>
+                        @project.ProjectId
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Location</strong>
+                    <p>
+                        @project.Location
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Status</strong>
+                    <p>
+                        @project.Status
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <strong>Description</strong>
+            <p>
+                @project.Description
+            </p>
+        </div>
+    </div>
+
+    <!-- ATTENDANCE FORM (safety)-->
+    <form asp-controller="StaffAttendance"
+          asp-action="Record"
+          method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden"
+               name="projectId"
+               value="@project.ProjectId" />
+
+        <div asp-validation-summary="All"
+             class="alert alert-danger">
+        </div>
+
+        <!-- ATTENDANCE DETAILS -->
+        
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    Attendance Details
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Attendance Date
+                        </label>
+                        <input type="date"
+                               name="attDate"
+                               class="form-control"
+                               value="@DateTime.Today.ToString("yyyy-MM-dd")"
+                               required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Status
+                        </label>
+                        <select name="status"
+                                class="form-select"
+                                required>
+                            <option value="">
+                                -- Select Status --
+                            </option>
+                            <option value="PRESENT">
+                                PRESENT
+                            </option>
+                            <option value="ABSENT">
+                                ABSENT
+                            </option>
+                            <option value="LATE">
+                                LATE
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Hours Worked
+                        </label>
+                        <input type="number"
+                               name="hoursWorked"
+                               class="form-control"
+                               min="0"
+                               max="24"
+                               step="0.01"
+                               placeholder="e.g. 5.50" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VOLUNTEERS(assigned) -->
+       
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    Volunteers Assigned to This Project
+                </h4>
+            </div>
+            <div class="card-body">
+                @if (volunteers != null && volunteers.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>
+                                        Select
+                                    </th>
+                                    <th>
+                                        Volunteer ID
+                                    </th>
+                                    <th>
+                                        First Name
+                                    </th>
+                                    <th>
+                                        Last Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var volunteer in volunteers)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <input type="checkbox"
+                                                   name="volunteerIds"
+                                                   value="@volunteer.Vid"
+                                                   class="form-check-input"
+                                                   @(selectedVolunteerIds.Contains(volunteer.Vid)
+                                                       ? "checked"
+                                                       : "") />
+                                        </td>
+                                        <td>
+                                            @volunteer.Vid
+                                        </td>
+                                        <td>
+                                            @volunteer.PidNavigation.FirstName
+                                        </td>
+                                        <td>
+                                            @volunteer.PidNavigation.LastName
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <strong>Important:</strong>
+                        Only volunteers assigned to
+                        <strong>@project.ProjectName</strong>
+                        are shown here.
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit"
+                                class="btn btn-success me-2">
+                            Save Attendance
+                        </button>
+                        <a asp-controller="StaffAttendance"
+                           asp-action="Index"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-4">
+                        <h4>
+                            No Volunteers Assigned
+                        </h4>
+                        <p class="text-muted">
+                            No volunteers have been assigned
+                            to this project yet.
+                        </p>
+                        <a asp-controller="StaffProjects"
+                           asp-action="Assign"
+                           asp-route-id="@project.ProjectId"
+                           class="btn btn-primary">
+                            Assign Volunteers
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="StaffAttendance"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Projects
+        </a>
+    </div>
+</div>

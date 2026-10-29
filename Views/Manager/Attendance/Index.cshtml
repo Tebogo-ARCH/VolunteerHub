@@ -1,0 +1,229 @@
+﻿@model List<VolunteerHub.Models.Attendance>
+@{
+    ViewData["Title"] = "Attendance";
+}
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER-->
+  
+    <div class="vh-dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="small text-uppercase fw-semibold mb-2"
+                     style="letter-spacing: 1px; color: #8FAADC;">
+                    VolunteerHub Management
+                </div>
+                <h1 class="mb-2">
+                    Volunteer Attendance
+                </h1>
+                <p class="mb-2">
+                    Attendance records for volunteers in your organization.
+                </p>
+                <p class="mb-0">
+                    Manager:
+                    <strong>
+                        @ViewBag.FirstName @ViewBag.LastName
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search box-->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <label for="attendanceSearch" class="form-label">
+                Search Attendance
+            </label>
+            <input type="text"
+                   id="attendanceSearch"
+                   class="form-control"
+                   placeholder="Search by volunteer name, project, date, status..."
+                   onkeyup="searchAttendance()" />
+        </div>
+    </div>
+
+    <!-- ATTENDANCE TABLE-->
+    
+    @* Checks that the model exists and contains at least one record. *@
+    @if (Model != null && Model.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        Organization Attendance
+                    </span>
+                    <span class="badge bg-light text-dark">
+                        @Model.Count Record(s)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle"
+                           id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Attendance ID</th>
+                                <th>Volunteer</th>
+                                <th>Project</th>
+                                <th>Attendance Date</th>
+                                <th>Status</th>
+                                <th>Hours</th>
+                                <th>Verified</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var attendance in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fw-semibold">
+                                            @attendance.AttId
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (attendance.VidNavigation != null &&
+                                             attendance.VidNavigation.PidNavigation != null)
+                                        {
+                                            <strong>
+                                                @attendance.VidNavigation.PidNavigation.FirstName
+                                                @attendance.VidNavigation.PidNavigation.LastName
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Unknown Volunteer
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (attendance.Project != null)
+                                        {
+                                            @attendance.Project.ProjectName
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Unknown Project
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @attendance.AttDate.ToString("dd MMM yyyy")
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(attendance.Status))
+                                        {
+                                            <span class="badge bg-primary">
+                                                @attendance.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Not specified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (attendance.HoursWorked.HasValue)
+                                        {
+                                            @attendance.HoursWorked.Value.ToString("0.00")
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                0.00
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (attendance.Verified == true)
+                                        {
+                                            <span class="badge bg-success">
+                                                Yes
+                                            </span>
+                                        }                                        
+                                        else if (attendance.Verified == false)
+                                        {
+                                            <span class="badge bg-danger">
+                                                No
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Pending
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="ManagerAttendance"
+                                           asp-action="Details"
+                                           asp-route-id="@attendance.AttId"
+                                           class="btn btn-sm btn-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="vh-empty-state">
+            <h3>
+                No Attendance Records Found
+            </h3>
+            <p class="text-muted mb-0">
+                There are currently no attendance records
+                for your organization's volunteers.
+            </p>
+        </div>
+    }
+
+    <div class="text-center mt-4 mb-4">
+        <a asp-controller="Manager"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- SEARCH SCRIPT-->
+
+<script>
+    function searchAttendance() {
+        var input =
+            document.getElementById("attendanceSearch");
+        var filter =
+            input.value.toLowerCase();
+        var table =
+            document.getElementById("attendanceTable");
+        if (!table) {
+            return;
+        }
+        var rows =
+            table.getElementsByTagName("tr");
+        for (var i = 1; i < rows.length; i++) {
+            var rowText =
+                rows[i].textContent.toLowerCase();
+            if (rowText.includes(filter)) {
+                rows[i].style.display = "";
+            }
+            else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>

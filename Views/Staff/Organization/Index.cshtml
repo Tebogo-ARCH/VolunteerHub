@@ -1,0 +1,159 @@
+﻿@model VolunteerHub.Models.Organization
+@{
+    ViewData["Title"] = "My Organization";
+}
+<div class="container mt-5">
+
+    <!-- PAGE HEADER -->
+    
+    <div class="text-center mb-5">
+        <h1>My Organization</h1>
+        <p class="lead">
+            Organization information
+        </p>
+        <p>
+            Staff:
+            <strong>
+                @ViewBag.FirstName @ViewBag.LastName
+            </strong>
+        </p>
+    </div>
+
+    <!-- ORGANIZATION DETAILS -->
+  
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h2>
+                        @Model.OrgName
+                    </h2>
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-4">
+                        <strong>Description:</strong>
+                        <p>
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                @Model.Description
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    No description available.
+                                </span>
+                            }
+                        </p>
+                    </div>
+                    <hr />
+
+                    <div class="mb-4">
+                        <h4>
+                            Organization Address
+                        </h4>
+                        @if (Model.Address != null)
+                        {
+                            <p>
+                                <strong>Street Address:</strong><br />
+                                @Model.Address.StreetAddress
+                            </p>
+                            @if (!string.IsNullOrEmpty(Model.Address.Suburb))
+                            {
+                                <p>
+
+                                    <strong>Suburb:</strong><br />
+                                    @Model.Address.Suburb
+                                </p>
+                            }
+                            <p>
+                                <strong>City:</strong><br />
+                                @Model.Address.City
+                            </p>
+                            <p>
+                                <strong>Province:</strong><br />
+                                @Model.Address.Province
+                            </p>
+                            @if (!string.IsNullOrEmpty(Model.Address.PostalCode))
+                            {
+                                <p>
+                                    <strong>Postal Code:</strong><br />
+                                    @Model.Address.PostalCode
+                                </p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">
+                                No organization address has been assigned.
+                            </p>
+                        }
+                    </div>
+
+                    <hr />
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>Email:</strong>
+                            <p>
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    @Model.Email
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Not available
+                                    </span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Phone:</strong>
+                            <p>
+                                @if (!string.IsNullOrEmpty(Model.Phone))
+                                {
+                                    @Model.Phone
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Not available
+                                    </span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+
+
+                    <div class="mb-4">
+                        <strong>Manager:</strong>
+                        <p>
+                            @if (Model.MidNavigation != null &&
+                                 Model.MidNavigation.PidNavigation != null)
+                            {
+                                @Model.MidNavigation.PidNavigation.FirstName
+                                @: @Model.MidNavigation.PidNavigation.LastName
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    Manager information unavailable.
+                                </span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-5">
+        <a asp-controller="Staff"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
