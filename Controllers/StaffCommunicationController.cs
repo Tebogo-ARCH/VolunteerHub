@@ -22,7 +22,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // Finds the logged-in staff member and their organization.
         private (
             Person? Person,
             Staff? Staff,
@@ -58,8 +57,6 @@ namespace VolunteerHub.Controllers
             return (person, staff, organization);
         }
 
-        // GET: StaffCommunication
-        // Shows announcements for the staff member's organization.
         [HttpGet]
         public IActionResult Index()
         {
@@ -96,8 +93,6 @@ namespace VolunteerHub.Controllers
             return View(IndexView, announcements);
         }
 
-        // GET: StaffCommunication/Details/5
-        // Only shows an announcement belonging to the staff member's organization.
         [HttpGet]
         public IActionResult Details(int id)
         {

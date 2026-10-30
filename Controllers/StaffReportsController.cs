@@ -13,15 +13,9 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================================
-        // REPORTS - INDEX
-        // ==========================================================
 
         public IActionResult Index()
         {
-            // ======================================================
-            // GET LOGGED-IN USER
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -30,9 +24,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -42,9 +33,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -54,10 +42,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // GET REPORTS
-            // ONLY REPORTS FROM THIS STAFF MEMBER'S ORGANIZATION
-            // ======================================================
 
             var reports = _context.Reports
                 .Include(r => r.Project)
@@ -67,17 +51,11 @@ namespace VolunteerHub.Controllers
                 .OrderByDescending(r => r.ReportId)
                 .ToList();
 
-            // ======================================================
-            // STAFF INFORMATION
-            // ======================================================
 
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
             ViewBag.Sid = staff.Sid;
 
-            // ======================================================
-            // RETURN REPORTS VIEW
-            // ======================================================
 
             return View(
                 "~/Views/Staff/Reports/Index.cshtml",
