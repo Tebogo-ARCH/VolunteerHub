@@ -1,30 +1,21 @@
-/* =========================================================
-   VOLUNTEERHUB PROFESSIONAL THEME
-   ========================================================= */
+/* VOLUNTEERHUB PROFESSIONAL THEME*/
 
 :root {
-    /* VolunteerHub Brand Colours */
-
+    
     --vh-primary: #2F5DA8;
     --vh-secondary: #8FAADC;
     --vh-third: #FFF1E8;
     --vh-fourth: #0C1F3F;
-    /* Supporting colours */
-
     --vh-white: #FFFFFF;
     --vh-light: #F7F9FC;
     --vh-muted: #667085;
     --vh-border: #D9E2F2;
-    /* Shadows */
-
     --vh-shadow: 0 8px 24px rgba(12, 31, 63, 0.08);
     --vh-shadow-hover: 0 14px 30px rgba(12, 31, 63, 0.14);
 }
 
 
-/* =========================================================
-   GENERAL
-   ========================================================= */
+/*GENERAL*/
 
 html {
     font-size: 14px;
@@ -46,11 +37,6 @@ body {
     font-family: "Segoe UI", Arial, sans-serif;
 }
 
-
-/* =========================================================
-   MAIN APPLICATION
-   ========================================================= */
-
 .vh-app {
     min-height: 100vh;
     display: flex;
@@ -61,11 +47,6 @@ body {
     flex: 1;
     padding-bottom: 40px;
 }
-
-
-/* =========================================================
-   NAVBAR
-   ========================================================= */
 
 .vh-navbar {
     background: linear-gradient( 135deg, var(--vh-fourth), var(--vh-primary) );
@@ -120,11 +101,6 @@ body {
         background: var(--vh-secondary);
     }
 
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
 .vh-footer {
     background: var(--vh-fourth);
     color: var(--vh-white);
@@ -157,11 +133,6 @@ body {
         text-decoration: underline;
     }
 
-
-/* =========================================================
-   PROFESSIONAL CARDS
-   ========================================================= */
-
 .card {
     border: 1px solid var(--vh-border);
     border-radius: 16px;
@@ -183,11 +154,6 @@ body {
     font-weight: 600;
 }
 
-
-/* =========================================================
-   HEADINGS
-   ========================================================= */
-
 h1,
 h2,
 h3,
@@ -202,11 +168,6 @@ h6 {
 .lead {
     color: var(--vh-muted);
 }
-
-
-/* =========================================================
-   PRIMARY BUTTON
-   ========================================================= */
 
 .btn-primary {
     background-color: var(--vh-primary) !important;
@@ -223,11 +184,6 @@ h6 {
         border-color: var(--vh-fourth) !important;
     }
 
-
-/* =========================================================
-   SECONDARY BUTTON
-   ========================================================= */
-
 .btn-secondary {
     background-color: var(--vh-secondary) !important;
     border-color: var(--vh-secondary) !important;
@@ -243,11 +199,6 @@ h6 {
         color: var(--vh-white) !important;
     }
 
-
-/* =========================================================
-   OUTLINE PRIMARY
-   ========================================================= */
-
 .btn-outline-primary {
     color: var(--vh-primary) !important;
     border-color: var(--vh-primary) !important;
@@ -261,10 +212,6 @@ h6 {
         color: var(--vh-white) !important;
     }
 
-
-/* =========================================================
-   SUCCESS BUTTON
-   ========================================================= */
 
 .btn-success {
     background-color: var(--vh-primary) !important;
@@ -280,19 +227,11 @@ h6 {
     }
 
 
-/* =========================================================
-   DANGER BUTTON
-   ========================================================= */
-
 .btn-danger {
     font-weight: 600;
     border-radius: 9px;
 }
 
-
-/* =========================================================
-   TABLES
-   ========================================================= */
 
 .table {
     margin-bottom: 0;
@@ -317,11 +256,6 @@ h6 {
     background-color: var(--vh-third);
 }
 
-
-/* =========================================================
-   BADGES
-   ========================================================= */
-
 .badge.bg-primary {
     background-color: var(--vh-primary) !important;
 }
@@ -331,11 +265,6 @@ h6 {
     background-color: var(--vh-secondary) !important;
     color: var(--vh-fourth) !important;
 }
-
-
-/* =========================================================
-   FORMS
-   ========================================================= */
 
 .form-control,
 .form-select {
@@ -350,11 +279,6 @@ h6 {
         border-color: var(--vh-primary);
         box-shadow: 0 0 0 0.2rem rgba(47, 93, 168, 0.15);
     }
-
-
-/* =========================================================
-   DASHBOARD HERO
-   ========================================================= */
 
 .vh-dashboard-header {
     background: linear-gradient( 135deg, var(--vh-fourth), var(--vh-primary) );
@@ -375,21 +299,10 @@ h6 {
     .vh-dashboard-header p {
         color: rgba(255, 255, 255, 0.78);
     }
-
-
-/* =========================================================
-   ORGANIZATION PANEL
-   ========================================================= */
-
 .vh-organization {
     background: linear-gradient( 135deg, var(--vh-third), var(--vh-white) );
     border-left: 6px solid var(--vh-primary);
 }
-
-
-/* =========================================================
-   DASHBOARD CARDS
-   ========================================================= */
 
 .vh-dashboard-card {
     height: 100%;
@@ -421,11 +334,6 @@ h6 {
     font-weight: 800;
 }
 
-
-/* =========================================================
-   EMPTY STATES
-   ========================================================= */
-
 .vh-empty-state {
     background: var(--vh-third);
     border: 1px dashed var(--vh-secondary);
@@ -433,11 +341,6 @@ h6 {
     padding: 50px 25px;
     text-align: center;
 }
-
-
-/* =========================================================
-   PAGE HEADER
-   ========================================================= */
 
 .vh-page-header {
     margin-bottom: 30px;
@@ -453,11 +356,6 @@ h6 {
     .vh-page-header p {
         color: var(--vh-muted);
     }
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 
 @media (max-width: 767px) {
 

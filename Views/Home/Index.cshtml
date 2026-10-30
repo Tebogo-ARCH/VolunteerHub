@@ -4,10 +4,6 @@
 }
 
 <style>
-    /* =========================================================
-       VOLUNTEERHUB COLOR PALETTE
-       ========================================================= */
-
     :root {
         --vh-cream: #FFF1E8;
         --vh-light-blue: #8FAADC;
@@ -15,9 +11,6 @@
         --vh-navy: #0C1F3F;
     }
 
-    /* =========================================================
-       PAGE RESET
-       ========================================================= */
 
     html,
     body {
@@ -32,9 +25,6 @@
         min-height: 100vh;
     }
 
-    /* =========================================================
-       FULL SCREEN HERO
-       ========================================================= */
 
     .vh-hero {
         position: fixed;
@@ -58,9 +48,6 @@
         box-sizing: border-box;
     }
 
-    /* =========================================================
-       BACKGROUND DECORATION
-       ========================================================= */
 
     .vh-circle {
         position: absolute;
@@ -100,9 +87,6 @@
         background: rgba(255, 241, 232, 0.07);
     }
 
-    /* =========================================================
-       MAIN CONTENT
-       ========================================================= */
 
     .vh-content {
         position: relative;
@@ -115,10 +99,6 @@
         box-sizing: border-box;
     }
 
-    /* =========================================================
-       LOGO
-       The logo is created entirely with CSS.
-       ========================================================= */
 
     .vh-logo {
         position: relative;
@@ -160,10 +140,6 @@
         transform: rotate(45deg);
     }
 
-    /* =========================================================
-       BRAND NAME
-       FIX: Centered normally without left: 50% or translation.
-       ========================================================= */
 
     .vh-brand {
         display: block;
@@ -181,9 +157,6 @@
         overflow-wrap: anywhere;
     }
 
-    /* =========================================================
-       TAGLINE
-       ========================================================= */
 
     .vh-tagline {
         margin: 0 0 16px;
@@ -193,9 +166,6 @@
         color: white;
     }
 
-    /* =========================================================
-       DESCRIPTION
-       ========================================================= */
 
     .vh-description {
         max-width: 720px;
@@ -205,9 +175,6 @@
         color: rgba(255, 241, 232, 0.95);
     }
 
-    /* =========================================================
-       LOGIN BUTTON
-       ========================================================= */
 
     .vh-login-btn {
         display: inline-block;
@@ -234,9 +201,6 @@
         box-shadow: 0 12px 30px rgba(12, 31, 63, 0.45);
     }
 
-    /* =========================================================
-       FEATURE SECTION
-       ========================================================= */
 
     .vh-features {
         display: flex;
@@ -247,9 +211,6 @@
         margin-top: 30px;
     }
 
-    /* =========================================================
-       FEATURE CARD
-       ========================================================= */
 
     .vh-feature {
         flex: 1 1 0;
@@ -273,9 +234,6 @@
         background: rgba(255, 241, 232, 0.18);
     }
 
-    /* =========================================================
-       FEATURE ICON PLACEHOLDER
-       ========================================================= */
 
     .vh-feature-icon {
         width: 38px;
@@ -287,9 +245,6 @@
         box-sizing: border-box;
     }
 
-    /* =========================================================
-       FEATURE TITLE
-       ========================================================= */
 
     .vh-feature h5 {
         margin: 0 0 6px;
@@ -298,9 +253,6 @@
         color: var(--vh-cream);
     }
 
-    /* =========================================================
-       FEATURE DESCRIPTION
-       ========================================================= */
 
     .vh-feature p {
         margin: 0;
@@ -309,9 +261,6 @@
         color: rgba(255, 241, 232, 0.9);
     }
 
-    /* =========================================================
-       TABLET
-       ========================================================= */
 
     @@media (max-width: 900px) {
         .vh-content {
@@ -332,9 +281,6 @@
         }
     }
 
-    /* =========================================================
-       MOBILE
-       ========================================================= */
 
     @@media (max-width: 700px) {
         .vh-content {
@@ -356,10 +302,6 @@
         }
     }
 
-    /* =========================================================
-       SHORT SCREENS
-       Keep the logo visible.
-       ========================================================= */
 
     @@media (max-height: 700px) {
         .vh-content {
@@ -429,10 +371,6 @@
         }
     }
 
-    /* =========================================================
-       VERY SHORT SCREENS
-       The logo is intentionally NOT hidden.
-       ========================================================= */
 
     @@media (max-height: 550px) {
         .vh-logo {
@@ -495,38 +433,28 @@
     }
 </style>
 
-<!-- =========================================================
-     VOLUNTEERHUB LANDING PAGE
-     ========================================================= -->
 
 <div class="vh-hero">
 
-    <!-- BACKGROUND DECORATION -->
 
     <div class="vh-circle vh-circle-one"></div>
     <div class="vh-circle vh-circle-two"></div>
     <div class="vh-circle vh-circle-three"></div>
     <div class="vh-circle vh-circle-four"></div>
 
-    <!-- MAIN CONTENT -->
 
     <main class="vh-content">
 
-        <!-- LOGO -->
 
         <div class="vh-logo" aria-label="VolunteerHub logo"></div>
 
-        <!-- BRAND NAME -->
 
         <h1 class="vh-brand">VolunteerHub</h1>
-
-        <!-- TAGLINE -->
 
         <div class="vh-tagline">
             Connect. Volunteer. Make an Impact.
         </div>
 
-        <!-- DESCRIPTION -->
 
         <p class="vh-description">
             Welcome to VolunteerHub, a platform designed to
@@ -536,7 +464,6 @@
             all in one place.
         </p>
 
-        <!-- LOGIN BUTTON -->
 
         <a asp-controller="Account"
            asp-action="Login"
@@ -544,11 +471,8 @@
             Login to VolunteerHub
         </a>
 
-        <!-- FEATURES -->
-
         <div class="vh-features">
 
-            <!-- PROJECTS -->
 
             <div class="vh-feature">
                 <div class="vh-feature-icon"></div>
@@ -561,8 +485,6 @@
                 </p>
             </div>
 
-            <!-- VOLUNTEERS -->
-
             <div class="vh-feature">
                 <div class="vh-feature-icon"></div>
 
@@ -574,7 +496,6 @@
                 </p>
             </div>
 
-            <!-- ATTENDANCE -->
 
             <div class="vh-feature">
                 <div class="vh-feature-icon"></div>
@@ -587,7 +508,6 @@
                 </p>
             </div>
 
-            <!-- CERTIFICATES -->
 
             <div class="vh-feature">
                 <div class="vh-feature-icon"></div>

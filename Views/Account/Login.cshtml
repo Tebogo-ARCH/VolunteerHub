@@ -6,10 +6,6 @@
 
 <style>
 
-    /* =========================================================
-           VOLUNTEERHUB COLORS
-           ========================================================= */
-
     :root {
         --vh-cream: #FFF1E8;
         --vh-light-blue: #8FAADC;
@@ -17,9 +13,7 @@
         --vh-navy: #0C1F3F;
     }
 
-    /* =========================================================
-           PAGE RESET
-           ========================================================= */
+    /*PAGE RESET*/
 
     html,
     body {
@@ -35,9 +29,7 @@
         min-height: 100vh;
     }
 
-    /* =========================================================
-           FULL SCREEN LOGIN BACKGROUND
-           ========================================================= */
+    /*BACKGROUND*/
 
     .vh-login-page {
         position: fixed;
@@ -55,10 +47,6 @@
         z-index: 9999;
         box-sizing: border-box;
     }
-
-    /* =========================================================
-           BACKGROUND CIRCLES
-           ========================================================= */
 
     .vh-login-circle {
         position: absolute;
@@ -98,9 +86,7 @@
         background: rgba(255, 241, 232, 0.07);
     }
 
-    /* =========================================================
-           LOGIN CONTENT
-           ========================================================= */
+    /*LOGIN */
 
     .vh-login-content {
         position: relative;
@@ -111,10 +97,6 @@
         box-sizing: border-box;
     }
 
-    /* =========================================================
-           LOGIN CARD
-           ========================================================= */
-
     .vh-login-card {
         width: 100%;
         padding: 38px;
@@ -123,10 +105,6 @@
         box-shadow: 0 25px 60px rgba(12, 31, 63, 0.45);
         box-sizing: border-box;
     }
-
-    /* =========================================================
-           LOGO
-           ========================================================= */
 
     .vh-login-logo {
         width: 72px;
@@ -161,10 +139,6 @@
             transform: rotate(45deg);
         }
 
-    /* =========================================================
-           BRAND
-           ========================================================= */
-
     .vh-login-brand {
         text-align: center;
         margin: 0 0 5px;
@@ -182,10 +156,6 @@
         font-weight: 500;
     }
 
-    /* =========================================================
-           FORM LABELS
-           ========================================================= */
-
     .vh-login-label {
         display: block;
         margin-bottom: 7px;
@@ -193,10 +163,6 @@
         font-size: 14px;
         font-weight: 700;
     }
-
-    /* =========================================================
-           FORM INPUTS
-           ========================================================= */
 
     .vh-login-input {
         width: 100%;
@@ -221,17 +187,9 @@
             color: #7b8798;
         }
 
-    /* =========================================================
-           FORM GROUP
-           ========================================================= */
-
     .vh-form-group {
         margin-bottom: 20px;
     }
-
-    /* =========================================================
-           VALIDATION
-           ========================================================= */
 
     .vh-validation {
         display: block;
@@ -249,10 +207,6 @@
         font-size: 14px;
     }
 
-    /* =========================================================
-           SUCCESS MESSAGES
-           ========================================================= */
-
     .vh-login-success {
         margin-bottom: 20px;
         padding: 12px 14px;
@@ -262,10 +216,6 @@
         color: #244d2b;
         font-size: 14px;
     }
-
-    /* =========================================================
-           FORGOT PASSWORD LINK
-           ========================================================= */
 
     .vh-forgot-password {
         display: block;
@@ -281,10 +231,6 @@
             color: var(--vh-navy);
             text-decoration: underline;
         }
-
-    /* =========================================================
-           LOGIN BUTTON
-           ========================================================= */
 
     .vh-login-submit {
         width: 100%;
@@ -305,10 +251,6 @@
             box-shadow: 0 8px 20px rgba(12, 31, 63, 0.25);
         }
 
-    /* =========================================================
-           BACK TO HOME
-           ========================================================= */
-
     .vh-back-home {
         display: block;
         text-align: center;
@@ -324,10 +266,6 @@
             text-decoration: underline;
         }
 
-    /* =========================================================
-           SECURITY TEXT
-           ========================================================= */
-
     .vh-login-footer {
         text-align: center;
         margin-top: 25px;
@@ -336,10 +274,6 @@
         color: #5b6b82;
         font-size: 12px;
     }
-
-    /* =========================================================
-           TABLET
-           ========================================================= */
 
     @@media (max-width: 600px) {
 
@@ -356,10 +290,6 @@
             font-size: 30px;
         }
     }
-
-    /* =========================================================
-           SHORT SCREEN
-           ========================================================= */
 
     @@media (max-height: 700px) {
 
@@ -408,10 +338,6 @@
         }
     }
 
-    /* =========================================================
-           VERY SHORT / ZOOMED OUT SCREEN
-           ========================================================= */
-
     @@media (max-height: 550px) {
 
         .vh-login-logo {
@@ -457,10 +383,6 @@
 
 </style>
 
-<!-- =========================================================
-     VOLUNTEERHUB LOGIN PAGE
-     ========================================================= -->
-
 <div class="vh-login-page">
 
     <!-- BACKGROUND DECORATION -->
@@ -470,31 +392,25 @@
     <div class="vh-login-circle vh-login-circle-three"></div>
     <div class="vh-login-circle vh-login-circle-four"></div>
 
-    <!-- LOGIN CONTENT -->
 
     <div class="vh-login-content">
 
-        <!-- LOGIN CARD -->
 
         <div class="vh-login-card">
 
-            <!-- LOGO -->
 
             <div class="vh-login-logo"></div>
 
-            <!-- BRAND -->
 
             <h1 class="vh-login-brand">
                 VolunteerHub
             </h1>
 
-            <!-- SUBTITLE -->
 
             <p class="vh-login-subtitle">
                 Sign in to access your account
             </p>
 
-            <!-- SHOW REGISTRATION SUCCESS MESSAGE -->
             @if (TempData["RegistrationSuccess"] != null)
             {
                 <div class="vh-login-success">
@@ -502,7 +418,6 @@
                 </div>
             }
 
-            <!-- SHOW PASSWORD RESET SUCCESS MESSAGE -->
             @if (TempData["PasswordResetSuccess"] != null)
             {
                 <div class="vh-login-success">
@@ -510,22 +425,18 @@
                 </div>
             }
 
-            <!-- LOGIN FORM -->
 
             <form asp-controller="Account"
                   asp-action="Login"
                   method="post">
 
-                <!-- Protect the form against cross-site request forgery -->
                 @Html.AntiForgeryToken()
 
-                <!-- DISPLAY LOGIN VALIDATION ERRORS -->
 
                 <div asp-validation-summary="ModelOnly"
                      class="vh-validation-summary">
                 </div>
 
-                <!-- USERNAME -->
 
                 <div class="vh-form-group">
 
@@ -545,7 +456,6 @@
 
                 </div>
 
-                <!-- PASSWORD -->
 
                 <div class="vh-form-group">
 
@@ -564,7 +474,6 @@
                           class="vh-validation">
                     </span>
 
-                    <!-- LINK TO FORGOT PASSWORD -->
 
                     <a asp-controller="Account"
                        asp-action="ForgotPassword"
@@ -574,14 +483,12 @@
 
                 </div>
 
-                <!-- LOGIN BUTTON -->
 
                 <button type="submit"
                         class="vh-login-submit">
                     Login to VolunteerHub
                 </button>
 
-                <!-- VOLUNTEER REGISTRATION -->
 
                 <div class="text-center mt-3">
 
@@ -597,15 +504,11 @@
 
             </form>
 
-            <!-- BACK TO HOME -->
-
             <a asp-controller="Home"
                asp-action="Index"
                class="vh-back-home">
                 Back to VolunteerHub
             </a>
-
-            <!-- FOOTER -->
 
             <div class="vh-login-footer">
                 VolunteerHub Volunteer Management Platform
