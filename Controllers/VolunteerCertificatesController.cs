@@ -16,12 +16,6 @@ namespace VolunteerHub.Controllers
         {
             _context = context;
         }
-
-
-        // =========================================================
-        // VIEW VOLUNTEER CERTIFICATES
-        // =========================================================
-
         public async Task<IActionResult> Index()
         {
             string? username =
@@ -31,12 +25,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // -----------------------------------------------------
-            // Find logged-in person
-            // -----------------------------------------------------
-
             var person = await _context.Persons
                 .FirstOrDefaultAsync(p =>
                     p.UserName.ToUpper() == username.ToUpper());
@@ -45,12 +33,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // -----------------------------------------------------
-            // Find volunteer
-            // -----------------------------------------------------
-
             var volunteer = await _context.Volunteers
                 .FirstOrDefaultAsync(v =>
                     v.Pid == person.Pid);
@@ -59,12 +41,6 @@ namespace VolunteerHub.Controllers
             {
                 return Forbid();
             }
-
-
-            // -----------------------------------------------------
-            // Get certificates belonging ONLY to this volunteer
-            // -----------------------------------------------------
-
             var certificates = await _context.Certificates
                 .Where(c => c.Vid == volunteer.Vid)
                 .Include(c => c.Project)
@@ -98,19 +74,9 @@ namespace VolunteerHub.Controllers
                 certificates
             );
         }
-
-
-        // =========================================================
-        // DOWNLOAD CERTIFICATE
-        // =========================================================
-
         [HttpGet]
         public async Task<IActionResult> Download(int id)
         {
-            // -----------------------------------------------------
-            // Get logged-in username
-            // -----------------------------------------------------
-
             string? username =
                 HttpContext.Session.GetString("Username");
 
@@ -118,12 +84,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // -----------------------------------------------------
-            // Find logged-in person
-            // -----------------------------------------------------
-
             var person = await _context.Persons
                 .FirstOrDefaultAsync(p =>
                     p.UserName.ToUpper() == username.ToUpper());
@@ -132,12 +92,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // -----------------------------------------------------
-            // Find volunteer
-            // -----------------------------------------------------
-
             var volunteer = await _context.Volunteers
                 .FirstOrDefaultAsync(v =>
                     v.Pid == person.Pid);
@@ -146,15 +100,6 @@ namespace VolunteerHub.Controllers
             {
                 return Forbid();
             }
-
-
-            // -----------------------------------------------------
-            // SECURITY CHECK
-            //
-            // Only the volunteer who owns the certificate
-            // can download it.
-            // -----------------------------------------------------
-
             var certificate = await _context.Certificates
                 .Include(c => c.Project)
                 .FirstOrDefaultAsync(c =>
@@ -165,36 +110,15 @@ namespace VolunteerHub.Controllers
             {
                 return NotFound();
             }
-
-
-            // -----------------------------------------------------
-            // Volunteer name
-            // -----------------------------------------------------
-
             string volunteerName =
                 $"{person.FirstName} {person.LastName}";
-
-
-            // -----------------------------------------------------
-            // Project name
-            // -----------------------------------------------------
 
             string projectName =
                 certificate.Project?.ProjectName
                 ?? "Volunteer Project";
 
-
-            // -----------------------------------------------------
-            // Volunteer ID
-            // -----------------------------------------------------
-
             int volunteerId =
                 volunteer.Vid;
-
-
-            // -----------------------------------------------------
-            // Issue date
-            // -----------------------------------------------------
 
             string issuedDate =
                 certificate.IssuedDate.HasValue
@@ -202,57 +126,27 @@ namespace VolunteerHub.Controllers
                         .ToString("dd MMMM yyyy")
                     : "Date not specified";
 
-
-            // -----------------------------------------------------
-            // Description
-            // -----------------------------------------------------
-
             string description =
                 string.IsNullOrWhiteSpace(
                     certificate.Description)
                     ? "For dedicated volunteer service and valuable contribution."
                     : certificate.Description;
 
-
-            // =====================================================
-            // QUESTPDF LICENSE
-            // =====================================================
-
             QuestPDF.Settings.License =
                 LicenseType.Community;
-
-
-            // =====================================================
-            // CREATE CERTIFICATE
-            // =====================================================
-
             var document = Document.Create(container =>
             {
                 container.Page(page =>
                 {
-                    // =================================================
-                    // PAGE
-                    // =================================================
-
                     page.Size(
                         PageSizes.A4.Landscape()
                     );
 
                     page.Margin(25);
 
-
-                    // =================================================
-                    // BACKGROUND
-                    // =================================================
-
                     page.Background(
                         "#F7F9FC"
                     );
-
-
-                    // =================================================
-                    // MAIN BORDER
-                    // =================================================
 
                     page.Content()
                         .Border(2)
@@ -262,28 +156,13 @@ namespace VolunteerHub.Controllers
                         .BorderColor("#AEBECD")
                         .Padding(28)
 
-
-                        // =================================================
-                        // MAIN CONTENT
-                        // =================================================
-
                         .Column(column =>
                         {
-
-                            // =============================================
-                            // TOP DECORATIVE BLUE AREA
-                            // =============================================
-
                             column.Item()
                                 .AlignCenter()
                                 .Width(150)
                                 .Height(8)
                                 .Background("#2F5DA8");
-
-
-                            // =============================================
-                            // CERTIFICATE
-                            // =============================================
 
                             column.Item()
                                 .PaddingTop(10)
@@ -292,11 +171,6 @@ namespace VolunteerHub.Controllers
                                 .FontSize(42)
                                 .FontFamily("Times New Roman")
                                 .FontColor("#101820");
-
-
-                            // =============================================
-                            // OF ACHIEVEMENT
-                            // =============================================
 
                             column.Item()
                                 .PaddingTop(2)
@@ -307,22 +181,12 @@ namespace VolunteerHub.Controllers
                                 .FontFamily("Times New Roman")
                                 .FontColor("#101820");
 
-
-                            // =============================================
-                            // DECORATIVE DIVIDER
-                            // =============================================
-
                             column.Item()
                                 .PaddingTop(10)
                                 .AlignCenter()
                                 .Text("✦")
                                 .FontSize(18)
                                 .FontColor("#2F5DA8");
-
-
-                            // =============================================
-                            // PRESENTED TO
-                            // =============================================
 
                             column.Item()
                                 .PaddingTop(6)
@@ -336,11 +200,6 @@ namespace VolunteerHub.Controllers
                                 .FontFamily("Times New Roman")
                                 .FontColor("#20252B");
 
-
-                            // =============================================
-                            // VOLUNTEER NAME
-                            // =============================================
-
                             column.Item()
                                 .PaddingTop(12)
                                 .AlignCenter()
@@ -350,22 +209,12 @@ namespace VolunteerHub.Controllers
                                 .FontFamily("Times New Roman")
                                 .FontColor("#101820");
 
-
-                            // =============================================
-                            // NAME UNDERLINE
-                            // =============================================
-
                             column.Item()
                                 .PaddingTop(5)
                                 .AlignCenter()
                                 .Width(560)
                                 .LineHorizontal(1)
                                 .LineColor("#AEBECD");
-
-
-                            // =============================================
-                            // DESCRIPTION
-                            // =============================================
 
                             column.Item()
                                 .PaddingTop(12)
@@ -376,11 +225,6 @@ namespace VolunteerHub.Controllers
                                 .FontFamily("Times New Roman")
                                 .FontColor("#30353A")
                                 .LineHeight(1.3f);
-
-
-                            // =============================================
-                            // PROJECT
-                            // =============================================
 
                             column.Item()
                                 .PaddingTop(10)
@@ -403,19 +247,10 @@ namespace VolunteerHub.Controllers
                                 .FontFamily("Times New Roman")
                                 .FontColor("#2F5DA8");
 
-
-                            // =============================================
-                            // VOLUNTEER ID + DATE
-                            // =============================================
-
                             column.Item()
                                 .PaddingTop(10)
                                 .Row(row =>
                                 {
-
-                                    // -----------------------------
-                                    // VOLUNTEER ID
-                                    // -----------------------------
 
                                     row.RelativeItem()
                                         .AlignCenter()
@@ -424,11 +259,6 @@ namespace VolunteerHub.Controllers
                                         )
                                         .FontSize(10)
                                         .FontColor("#555555");
-
-
-                                    // -----------------------------
-                                    // DATE
-                                    // -----------------------------
 
                                     row.RelativeItem()
                                         .AlignCenter()
@@ -441,18 +271,10 @@ namespace VolunteerHub.Controllers
                                 });
 
 
-                            // =============================================
-                            // SIGNATURES
-                            // =============================================
-
                             column.Item()
                                 .PaddingTop(18)
                                 .Row(row =>
                                 {
-
-                                    // -------------------------------------
-                                    // LEFT SIGNATURE
-                                    // -------------------------------------
 
                                     row.RelativeItem()
                                         .AlignCenter()
@@ -497,10 +319,6 @@ namespace VolunteerHub.Controllers
                                         });
 
 
-                                    // -------------------------------------
-                                    // CENTER SEAL
-                                    // -------------------------------------
-
                                     row.ConstantItem(120)
                                         .AlignCenter()
                                         .AlignMiddle()
@@ -535,10 +353,6 @@ namespace VolunteerHub.Controllers
 
                                         });
 
-
-                                    // -------------------------------------
-                                    // RIGHT SIGNATURE
-                                    // -------------------------------------
 
                                     row.RelativeItem()
                                         .AlignCenter()
@@ -588,18 +402,8 @@ namespace VolunteerHub.Controllers
                 });
             });
 
-
-            // =====================================================
-            // GENERATE PDF
-            // =====================================================
-
             byte[] pdfBytes =
                 document.GeneratePdf();
-
-
-            // =====================================================
-            // SAFE FILE NAME
-            // =====================================================
 
             string safeProjectName =
                 string.Join(
@@ -613,11 +417,6 @@ namespace VolunteerHub.Controllers
 
             string fileName =
                 $"VolunteerHub_Certificate_Volunteer_{volunteerId}_{safeProjectName}.pdf";
-
-
-            // =====================================================
-            // DOWNLOAD
-            // =====================================================
 
             return File(
                 pdfBytes,

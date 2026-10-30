@@ -13,16 +13,10 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================================
-        // PROJECTS
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Index()
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -31,9 +25,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -43,9 +34,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -55,16 +43,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // GET PROJECTS ASSIGNED TO THIS STAFF MEMBER
-            // ======================================================
-            //
-            // SID in PROJECT_ASSIGNMENTS identifies the staff member
-            // supervising the volunteer.
-            //
-            // Therefore, a staff member should only see projects
-            // where they actually have volunteer assignments.
-            // ======================================================
 
             var projects = _context.ProjectAssignments
                 .Where(pa =>
@@ -75,9 +53,6 @@ namespace VolunteerHub.Controllers
                 .OrderByDescending(p => p.StartDate)
                 .ToList();
 
-            // ======================================================
-            // STAFF INFORMATION
-            // ======================================================
 
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
@@ -90,16 +65,10 @@ namespace VolunteerHub.Controllers
         }
 
 
-        // ==========================================================
-        // RECORD ATTENDANCE - GET
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Record(int id)
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -108,9 +77,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -120,9 +86,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -132,12 +95,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // FIND PROJECT
-            // ======================================================
-            //
-            // The project must belong to the staff member's manager.
-            // ======================================================
 
             var project = _context.Projects
                 .FirstOrDefault(p =>
@@ -149,9 +106,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // ======================================================
-            // GET VOLUNTEERS ASSIGNED TO THIS STAFF MEMBER
-            // ======================================================
 
             var volunteers = _context.ProjectAssignments
                 .Include(pa => pa.VidNavigation)
@@ -165,24 +119,15 @@ namespace VolunteerHub.Controllers
                 .ThenBy(v => v.PidNavigation.LastName)
                 .ToList();
 
-            // ======================================================
-            // STAFF INFORMATION
-            // ======================================================
 
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
             ViewBag.Sid = staff.Sid;
 
-            // ======================================================
-            // PAGE INFORMATION
-            // ======================================================
 
             ViewBag.Project = project;
             ViewBag.Volunteers = volunteers;
 
-            // ======================================================
-            // RETURN RECORD ATTENDANCE PAGE
-            // ======================================================
 
             return View(
                 "~/Views/Staff/Attendance/Record.cshtml"
@@ -190,9 +135,6 @@ namespace VolunteerHub.Controllers
         }
 
 
-        // ==========================================================
-        // RECORD ATTENDANCE - POST
-        // ==========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -203,9 +145,6 @@ namespace VolunteerHub.Controllers
             string status,
             decimal? hoursWorked)
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -214,9 +153,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -226,10 +162,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
-
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
 
@@ -238,9 +170,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // FIND PROJECT
-            // ======================================================
 
             var project = _context.Projects
                 .FirstOrDefault(p =>
@@ -252,9 +181,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // ======================================================
-            // VALIDATE VOLUNTEERS
-            // ======================================================
 
             volunteerIds = volunteerIds?
                 .Distinct()
@@ -269,9 +195,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // ONLY ALLOW VOLUNTEERS ASSIGNED TO THIS STAFF MEMBER
-            // ======================================================
 
             var validVolunteerIds = _context.ProjectAssignments
                 .Where(pa =>
@@ -290,9 +213,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // VALIDATE HOURS
-            // ======================================================
 
             if (hoursWorked.HasValue &&
                 (hoursWorked.Value < 0 || hoursWorked.Value > 24))
@@ -303,9 +223,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // IF VALIDATION FAILED
-            // ======================================================
 
             if (!ModelState.IsValid)
             {
@@ -335,15 +252,9 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // RECORD ATTENDANCE FOR EACH SELECTED VOLUNTEER
-            // ======================================================
 
             foreach (var vid in validVolunteerIds)
             {
-                // ==================================================
-                // CHECK WHETHER ATTENDANCE ALREADY EXISTS
-                // ==================================================
 
                 var existingAttendance = _context.Attendances
                     .FirstOrDefault(a =>
@@ -351,25 +262,17 @@ namespace VolunteerHub.Controllers
                         a.ProjectId == projectId &&
                         a.AttDate == attDate);
 
-                // ==================================================
-                // UPDATE EXISTING RECORD
-                // ==================================================
 
                 if (existingAttendance != null)
                 {
                     existingAttendance.Status = status;
                     existingAttendance.HoursWorked = hoursWorked;
 
-                    // If staff changes the attendance,
-                    // volunteer must verify it again.
                     existingAttendance.Verified = false;
 
                     existingAttendance.Sid = staff.Sid;
                 }
 
-                // ==================================================
-                // CREATE NEW RECORD
-                // ==================================================
 
                 else
                 {
@@ -385,10 +288,8 @@ namespace VolunteerHub.Controllers
 
                         HoursWorked = hoursWorked,
 
-                        // Volunteer must verify later.
                         Verified = false,
 
-                        // Staff member who recorded the hours.
                         Sid = staff.Sid
                     };
 
@@ -396,42 +297,18 @@ namespace VolunteerHub.Controllers
                 }
             }
 
-            // ======================================================
-            // SAVE
-            // ======================================================
 
             _context.SaveChanges();
 
-            // ======================================================
-            // RETURN TO PROJECT LIST
-            // ======================================================
 
             return RedirectToAction(nameof(Index));
         }
 
 
-        // ==========================================================
-        // COMPLETION PAGE - GET
-        // ==========================================================
-        //
-        // Shows the staff member:
-        // - Volunteers assigned to them
-        // - Assignment status
-        // - Attendance records
-        // - Total hours
-        // - Verified hours
-        // - Whether volunteer can be marked COMPLETED
-        //
-        // The project itself is NOT completed here.
-        // The manager will handle project completion later.
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Completion(int id)
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -439,10 +316,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -452,9 +325,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -464,9 +334,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // FIND PROJECT
-            // ======================================================
 
             var project = _context.Projects
                 .FirstOrDefault(p =>
@@ -478,9 +345,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // ======================================================
-            // GET THIS STAFF MEMBER'S ASSIGNMENTS
-            // ======================================================
 
             var assignments = _context.ProjectAssignments
                 .Include(pa => pa.VidNavigation)
@@ -493,17 +357,11 @@ namespace VolunteerHub.Controllers
                 .ThenBy(pa => pa.VidNavigation.PidNavigation.LastName)
                 .ToList();
 
-            // ======================================================
-            // GET ALL ATTENDANCE FOR THIS PROJECT
-            // ======================================================
 
             var allAttendance = _context.Attendances
                 .Where(a => a.ProjectId == id)
                 .ToList();
 
-            // ======================================================
-            // BUILD COMPLETION INFORMATION
-            // ======================================================
 
             var volunteerRows = new List<StaffCompletionRow>();
 
@@ -513,18 +371,12 @@ namespace VolunteerHub.Controllers
                     .Where(a => a.Vid == assignment.Vid)
                     .ToList();
 
-                // ==================================================
-                // VOLUNTEER NAME
-                // ==================================================
 
                 var volunteerName =
                     assignment.VidNavigation.PidNavigation.FirstName
                     + " "
                     + assignment.VidNavigation.PidNavigation.LastName;
 
-                // ==================================================
-                // ATTENDANCE INFORMATION
-                // ==================================================
 
                 var hasAttendance = attendance.Any();
 
@@ -536,22 +388,11 @@ namespace VolunteerHub.Controllers
                 var verifiedAttendanceCount = attendance
                     .Count(a => a.Verified == true);
 
-                // ==================================================
-                // ALL HOURS VERIFIED
-                // ==================================================
-                //
-                // A volunteer cannot be completed if:
-                // - there are no attendance records
-                // - any attendance record is not verified
-                // ==================================================
 
                 var allHoursVerified =
                     hasAttendance &&
                     attendance.All(a => a.Verified == true);
 
-                // ==================================================
-                // CAN MARK COMPLETED
-                // ==================================================
 
                 var canMarkCompleted =
                     allHoursVerified &&
@@ -578,16 +419,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // DETERMINE WHETHER THE WHOLE PROJECT IS READY
-            // ======================================================
-            //
-            // This checks ALL non-declined assignments for the
-            // project, not only this staff member's assignments.
-            //
-            // This is important because a project may have multiple
-            // staff members supervising different volunteers.
-            // ======================================================
 
             var allProjectAssignments = _context.ProjectAssignments
                 .Where(pa =>
@@ -628,9 +459,6 @@ namespace VolunteerHub.Controllers
                 }
             }
 
-            // ======================================================
-            // PAGE INFORMATION
-            // ======================================================
 
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
@@ -642,17 +470,6 @@ namespace VolunteerHub.Controllers
 
             ViewBag.ProjectReadyForManager = projectReadyForManager;
 
-            // ======================================================
-            // RETURN COMPLETION PAGE
-            // ======================================================
-            //
-            // IMPORTANT:
-            // Completion.cshtml declares:
-            //
-            // @model VolunteerHub.Models.Project
-            //
-            // Therefore we MUST pass "project" as the model.
-            // ======================================================
 
             return View(
                 "~/Views/Staff/Attendance/Completion.cshtml",
@@ -660,28 +477,10 @@ namespace VolunteerHub.Controllers
             );
         }
 
-
-        // ==========================================================
-        // COMPLETE VOLUNTEER ASSIGNMENT - POST
-        // ==========================================================
-        //
-        // A staff member can only mark a volunteer completed when:
-        //
-        // 1. The assignment belongs to that staff member.
-        // 2. The assignment is not DECLINED.
-        // 3. Attendance exists.
-        // 4. Every attendance record is VERIFIED.
-        //
-        // The project itself is NOT changed to COMPLETED here.
-        // ==========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CompleteAssignment(int id)
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -690,9 +489,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND PERSON
-            // ======================================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -702,9 +498,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ======================================================
-            // FIND STAFF
-            // ======================================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -714,14 +507,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // ======================================================
-            // FIND ASSIGNMENT
-            // ======================================================
-            //
-            // SECURITY:
-            // The assignment must belong to the logged-in staff
-            // member through SID.
-            // ======================================================
 
             var assignment = _context.ProjectAssignments
                 .FirstOrDefault(pa =>
@@ -734,9 +519,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // ======================================================
-            // GET ATTENDANCE
-            // ======================================================
 
             var attendance = _context.Attendances
                 .Where(a =>
@@ -744,9 +526,6 @@ namespace VolunteerHub.Controllers
                     a.Vid == assignment.Vid)
                 .ToList();
 
-            // ======================================================
-            // REQUIRE ATTENDANCE
-            // ======================================================
 
             if (!attendance.Any())
             {
@@ -759,9 +538,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // REQUIRE ALL ATTENDANCE TO BE VERIFIED
-            // ======================================================
 
             var allVerified = attendance
                 .All(a => a.Verified == true);
@@ -777,28 +553,16 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // ======================================================
-            // MARK ASSIGNMENT COMPLETED
-            // ======================================================
 
             assignment.Status = "COMPLETED";
 
-            // ======================================================
-            // SAVE
-            // ======================================================
 
             _context.SaveChanges();
 
-            // ======================================================
-            // SUCCESS MESSAGE
-            // ======================================================
 
             TempData["SuccessMessage"] =
                 "The volunteer has been marked as COMPLETED successfully.";
 
-            // ======================================================
-            // RETURN TO COMPLETION PAGE
-            // ======================================================
 
             return RedirectToAction(
                 nameof(Completion),
@@ -807,14 +571,6 @@ namespace VolunteerHub.Controllers
         }
     }
 
-
-    // ==============================================================
-    // COMPLETION ROW
-    // ==============================================================
-    //
-    // This small class is used only by the Completion page.
-    // It avoids creating another ViewModel file for now.
-    // ==============================================================
 
     public class StaffCompletionRow
     {

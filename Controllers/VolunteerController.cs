@@ -14,13 +14,8 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-
-        // ==========================================
-        // VOLUNTEER DASHBOARD
-        // ==========================================
         public IActionResult Index()
         {
-            // Get logged-in username from session
             var username = HttpContext.Session.GetString("Username");
 
             if (string.IsNullOrEmpty(username))
@@ -28,10 +23,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
-            // ==========================================
-            // GET PERSON
-            // ==========================================
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
 
@@ -40,10 +31,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
-            // ==========================================
-            // GET VOLUNTEER
-            // ==========================================
             var volunteer = _context.Volunteers
                 .FirstOrDefault(v => v.Pid == person.Pid);
 
@@ -52,18 +39,10 @@ namespace VolunteerHub.Controllers
                 return Forbid();
             }
 
-
-            // ==========================================
-            // VOLUNTEER INFORMATION
-            // ==========================================
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
             ViewBag.Vid = volunteer.Vid;
 
-
-            // ==========================================
-            // GET ORGANIZATION
-            // ==========================================
             var organization = _context.Organizations
                 .Include(o => o.Address)
                 .FirstOrDefault(o => o.Mid == volunteer.Mid);
@@ -74,16 +53,9 @@ namespace VolunteerHub.Controllers
             return View();
         }
 
-
-        // ==========================================
-        // VIEW VOLUNTEER PROFILE
-        // ==========================================
         [HttpGet]
         public IActionResult Profile()
         {
-            // ==========================================
-            // GET LOGGED-IN USERNAME
-            // ==========================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -91,11 +63,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // ==========================================
-            // GET PERSON
-            // ==========================================
 
             var person = _context.Persons
                 .Include(p => p.Address)
@@ -106,11 +73,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
-            // ==========================================
-            // GET VOLUNTEER
-            // ==========================================
-
             var volunteer = _context.Volunteers
                 .Include(v => v.VolunteerSkills)
                 .FirstOrDefault(v => v.Pid == person.Pid);
@@ -120,19 +82,10 @@ namespace VolunteerHub.Controllers
                 return Forbid();
             }
 
-
-            // ==========================================
-            // GET ALL AVAILABLE SKILLS
-            // ==========================================
-
             var skills = _context.Skills
                 .OrderBy(s => s.SkillName)
                 .ToList();
 
-
-            // ==========================================
-            // CREATE PROFILE VIEW MODEL
-            // ==========================================
 
             var model = new VolunteerProfileViewModel
             {
@@ -157,11 +110,6 @@ namespace VolunteerHub.Controllers
                     .ToList()
             };
 
-
-            // ==========================================
-            // LOAD ADDRESS
-            // ==========================================
-
             if (person.Address != null)
             {
                 model.StreetAddress = person.Address.StreetAddress;
@@ -175,28 +123,15 @@ namespace VolunteerHub.Controllers
                 model.PostalCode = person.Address.PostalCode;
             }
 
-
-            // ==========================================
-            // OPEN PROFILE PAGE
-            // ==========================================
-
             return View(
                 "~/Views/Volunteer/Profile/Index.cshtml",
                 model
             );
         }
-
-
-        // ==========================================
-        // UPDATE VOLUNTEER PROFILE
-        // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Profile(VolunteerProfileViewModel model)
         {
-            // ==========================================
-            // GET LOGGED-IN USERNAME
-            // ==========================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -205,10 +140,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
-            // ==========================================
-            // GET PERSON
-            // ==========================================
 
             var person = _context.Persons
                 .Include(p => p.Address)
@@ -220,10 +151,6 @@ namespace VolunteerHub.Controllers
             }
 
 
-            // ==========================================
-            // GET VOLUNTEER
-            // ==========================================
-
             var volunteer = _context.Volunteers
                 .Include(v => v.VolunteerSkills)
                 .FirstOrDefault(v => v.Pid == person.Pid);
@@ -233,19 +160,10 @@ namespace VolunteerHub.Controllers
                 return Forbid();
             }
 
-
-            // ==========================================
-            // GET AVAILABLE SKILLS
-            // ==========================================
-
             model.AvailableSkills = _context.Skills
                 .OrderBy(s => s.SkillName)
                 .ToList();
 
-
-            // ==========================================
-            // VALIDATE FORM
-            // ==========================================
 
             if (!ModelState.IsValid)
             {
@@ -256,10 +174,6 @@ namespace VolunteerHub.Controllers
             }
 
 
-            // ==========================================
-            // UPDATE PERSONAL INFORMATION
-            // ==========================================
-
             person.FirstName = model.FirstName;
 
             person.LastName = model.LastName;
@@ -269,15 +183,8 @@ namespace VolunteerHub.Controllers
             person.Phone = model.Phone;
 
 
-            // ==========================================
-            // UPDATE ADDRESS
-            // ==========================================
-
             if (person.Address == null)
             {
-                // ======================================
-                // CREATE NEW ADDRESS
-                // ======================================
 
                 var newAddress = new Address
                 {
@@ -302,9 +209,6 @@ namespace VolunteerHub.Controllers
             }
             else
             {
-                // ======================================
-                // UPDATE EXISTING ADDRESS
-                // ======================================
 
                 person.Address.StreetAddress =
                     model.StreetAddress ?? "";
@@ -322,26 +226,15 @@ namespace VolunteerHub.Controllers
                     model.PostalCode;
             }
 
-
-            // ==========================================
-            // UPDATE VOLUNTEER SKILLS
-            // ==========================================
-
-            // Remove the volunteer's existing skills
             _context.VolunteerSkills.RemoveRange(
                 volunteer.VolunteerSkills
             );
 
 
-            // ==========================================
-            // ADD EXISTING SELECTED SKILLS
-            // ==========================================
-
             if (model.SelectedSkillIds != null)
             {
                 foreach (var skillId in model.SelectedSkillIds.Distinct())
                 {
-                    // Check that the skill exists
                     var skillExists = _context.Skills
                         .Any(s => s.SkillId == skillId);
 
@@ -358,14 +251,8 @@ namespace VolunteerHub.Controllers
                 }
             }
 
-
-            // ==========================================
-            // ADD NEW SKILLS
-            // ==========================================
-
             if (!string.IsNullOrWhiteSpace(model.NewSkills))
             {
-                // Split skills using commas
                 var newSkillNames = model.NewSkills
                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .Select(s => s.Trim())
@@ -376,7 +263,6 @@ namespace VolunteerHub.Controllers
 
                 foreach (var skillName in newSkillNames)
                 {
-                    // Check if this skill already exists
                     var existingSkill = _context.Skills
                         .FirstOrDefault(s =>
                             s.SkillName.ToLower() == skillName.ToLower());
@@ -387,18 +273,10 @@ namespace VolunteerHub.Controllers
 
                     if (existingSkill != null)
                     {
-                        // ======================================
-                        // SKILL ALREADY EXISTS
-                        // ======================================
-
                         skillId = existingSkill.SkillId;
                     }
                     else
                     {
-                        // ======================================
-                        // CREATE NEW SKILL
-                        // ======================================
-
                         var newSkill = new Skill
                         {
                             SkillName = skillName
@@ -406,17 +284,10 @@ namespace VolunteerHub.Controllers
 
                         _context.Skills.Add(newSkill);
 
-                        // Save so the new Skill gets its SkillId
                         _context.SaveChanges();
 
                         skillId = newSkill.SkillId;
                     }
-
-
-                    // ======================================
-                    // LINK SKILL TO VOLUNTEER
-                    // ======================================
-
                     volunteer.VolunteerSkills.Add(
                         new VolunteerSkill
                         {
@@ -426,26 +297,10 @@ namespace VolunteerHub.Controllers
                     );
                 }
             }
-
-
-            // ==========================================
-            // SAVE ALL CHANGES
-            // ==========================================
-
             _context.SaveChanges();
-
-
-            // ==========================================
-            // SUCCESS MESSAGE
-            // ==========================================
 
             TempData["SuccessMessage"] =
                 "Your profile has been updated successfully.";
-
-
-            // ==========================================
-            // RETURN TO PROFILE
-            // ==========================================
 
             return RedirectToAction("Profile");
         }

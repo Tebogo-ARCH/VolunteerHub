@@ -14,9 +14,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================================
-        // PROJECT LIST
-        // ==========================================================
         [HttpGet]
         public IActionResult Index()
         {
@@ -43,7 +40,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // Get projects managed by this staff member's organization.
             var projects = _context.Projects
                 .Where(p => p.Mid == staff.Mid)
                 .OrderByDescending(p => p.StartDate)
@@ -57,9 +53,6 @@ namespace VolunteerHub.Controllers
             return View("/Views/Staff/Projects/Index.cshtml", projects);
         }
 
-        // ==========================================================
-        // ASSIGN VOLUNTEERS - GET
-        // ==========================================================
         [HttpGet]
         public IActionResult Assign(int id)
         {
@@ -86,7 +79,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // Confirm the project belongs to this staff member's organization.
             var project = _context.Projects
                 .FirstOrDefault(p =>
                     p.ProjectId == id &&
@@ -97,7 +89,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // Get volunteers from the same organization and their skills.
             var volunteers = _context.Volunteers
                 .Include(v => v.PidNavigation)
                 .Include(v => v.VolunteerSkills)
@@ -107,7 +98,6 @@ namespace VolunteerHub.Controllers
                 .ThenBy(v => v.PidNavigation.LastName)
                 .ToList();
 
-            // Include all existing assignment records to avoid duplicates.
             var assignedVolunteerIds = _context.ProjectAssignments
                 .Where(pa => pa.ProjectId == id)
                 .Select(pa => pa.Vid)
@@ -127,9 +117,6 @@ namespace VolunteerHub.Controllers
             return View("/Views/Staff/Projects/Assign.cshtml", model);
         }
 
-        // ==========================================================
-        // ASSIGN VOLUNTEERS - POST
-        // ==========================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Assign(
@@ -176,12 +163,10 @@ namespace VolunteerHub.Controllers
                     "Please select at least one volunteer.");
             }
 
-            // Remove duplicate volunteer IDs from the submitted list.
             volunteerIds = volunteerIds?
                 .Distinct()
                 .ToList() ?? new List<int>();
 
-            // Only accept volunteers who belong to this organization.
             var validVolunteerIds = _context.Volunteers
                 .Where(v =>
                     v.Mid == staff.Mid &&
@@ -196,7 +181,6 @@ namespace VolunteerHub.Controllers
                     "One or more selected volunteers do not belong to your organization.");
             }
 
-            // If validation fails, reload the assignment page.
             if (!ModelState.IsValid)
             {
                 var volunteers = _context.Volunteers
@@ -228,7 +212,6 @@ namespace VolunteerHub.Controllers
                 return View("/Views/Staff/Projects/Assign.cshtml", model);
             }
 
-            // Get volunteers who already have assignment records.
             var existingAssignments = _context.ProjectAssignments
                 .Where(pa =>
                     pa.ProjectId == projectId &&
@@ -239,7 +222,6 @@ namespace VolunteerHub.Controllers
                 .Select(pa => pa.Vid)
                 .ToHashSet();
 
-            // Preserve the existing manual-assignment workflow.
             foreach (var vid in validVolunteerIds)
             {
                 if (alreadyAssignedIds.Contains(vid))
@@ -263,9 +245,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ==========================================================
-        // REVIEW VOLUNTEER APPLICATIONS - GET
-        // ==========================================================
         [HttpGet]
         public IActionResult Requests()
         {
@@ -292,7 +271,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // Only show pending applications for this organization.
             var requests = _context.ProjectAssignments
                 .Include(pa => pa.Project)
                 .Include(pa => pa.VidNavigation)
@@ -311,9 +289,6 @@ namespace VolunteerHub.Controllers
             return View("/Views/Staff/Projects/Requests.cshtml", requests);
         }
 
-        // ==========================================================
-        // ACCEPT VOLUNTEER APPLICATION
-        // ==========================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AcceptRequest(int id)
@@ -321,9 +296,6 @@ namespace VolunteerHub.Controllers
             return ReviewApplication(id, "ACCEPTED");
         }
 
-        // ==========================================================
-        // DECLINE VOLUNTEER APPLICATION
-        // ==========================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeclineRequest(int id)
@@ -331,9 +303,6 @@ namespace VolunteerHub.Controllers
             return ReviewApplication(id, "DECLINED");
         }
 
-        // ==========================================================
-        // PROCESS APPLICATION REVIEW
-        // ==========================================================
         private IActionResult ReviewApplication(
             int id,
             string newStatus)
@@ -361,7 +330,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            // Only allow staff to review pending requests for their organization.
             var assignment = _context.ProjectAssignments
                 .Include(pa => pa.Project)
                 .FirstOrDefault(pa =>
@@ -380,7 +348,6 @@ namespace VolunteerHub.Controllers
 
             assignment.Status = newStatus;
 
-            // Record which staff member reviewed the request.
             assignment.Sid = staff.Sid;
 
             _context.SaveChanges();

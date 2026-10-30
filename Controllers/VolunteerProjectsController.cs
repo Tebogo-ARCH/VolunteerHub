@@ -15,9 +15,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // GET LOGGED-IN VOLUNTEER
-        // ==========================================
         private (Person? Person, Volunteer? Volunteer) GetCurrentVolunteer()
         {
             var username = HttpContext.Session.GetString("Username");
@@ -37,9 +34,6 @@ namespace VolunteerHub.Controllers
             return (person, volunteer);
         }
 
-        // ==========================================
-        // CHECK LOGIN
-        // ==========================================
         private IActionResult? CheckLogin()
         {
             if (string.IsNullOrWhiteSpace(
@@ -51,9 +45,6 @@ namespace VolunteerHub.Controllers
             return null;
         }
 
-        // ==========================================
-        // MY PROJECTS - CATEGORY CARDS
-        // ==========================================
         [HttpGet]
         public IActionResult Index()
         {
@@ -78,9 +69,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================
-        // UPCOMING PROJECTS
-        // ==========================================
         [HttpGet]
         public IActionResult Upcoming()
         {
@@ -99,8 +87,6 @@ namespace VolunteerHub.Controllers
 
             var today = DateOnly.FromDateTime(DateTime.Today);
 
-            // Upcoming projects belong to the volunteer's organization,
-            // have PLANNING status, and have not started yet.
             var projects = _context.Projects
                 .Include(p => p.MidNavigation)
                     .ThenInclude(m => m.Organizations)
@@ -139,9 +125,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================
-        // APPLY FOR AN UPCOMING PROJECT
-        // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Apply(int projectId)
@@ -161,8 +144,6 @@ namespace VolunteerHub.Controllers
 
             var today = DateOnly.FromDateTime(DateTime.Today);
 
-            // Only allow applications for future PLANNING projects
-            // belonging to the volunteer's organization.
             var project = _context.Projects
                 .FirstOrDefault(p =>
                     p.ProjectId == projectId &&
@@ -179,7 +160,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction(nameof(Upcoming));
             }
 
-            // SID is required by PROJECT_ASSIGNMENTS.
             var staff = _context.Staff
                 .Where(s => s.Mid == project.Mid)
                 .OrderBy(s => s.Sid)
@@ -193,8 +173,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction(nameof(Upcoming));
             }
 
-            // Reuse an existing declined assignment rather than
-            // inserting a duplicate project-volunteer record.
             var assignment = _context.ProjectAssignments
                 .FirstOrDefault(pa =>
                     pa.ProjectId == projectId &&
@@ -230,7 +208,6 @@ namespace VolunteerHub.Controllers
                     return RedirectToAction(nameof(Upcoming));
                 }
 
-                // Permit reapplication after a previous decline.
                 assignment.Sid = staff.Sid;
                 assignment.Status = "PENDING";
             }
@@ -255,9 +232,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Upcoming));
         }
 
-        // ==========================================
-        // ONGOING PROJECTS
-        // ==========================================
         [HttpGet]
         public IActionResult Ongoing()
         {
@@ -274,7 +248,6 @@ namespace VolunteerHub.Controllers
             if (volunteer == null)
                 return Forbid();
 
-            // Supports both status values used for active projects.
             var model = GetVolunteerProjects(
                 volunteer.Vid,
                 volunteer.Mid,
@@ -288,9 +261,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================
-        // COMPLETED PROJECTS
-        // ==========================================
         [HttpGet]
         public IActionResult Completed()
         {
@@ -320,9 +290,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================
-        // CANCELED PROJECTS
-        // ==========================================
         [HttpGet]
         public IActionResult Canceled()
         {
@@ -339,8 +306,6 @@ namespace VolunteerHub.Controllers
             if (volunteer == null)
                 return Forbid();
 
-            // Includes canceled projects for which this volunteer
-            // has a pending application or a non-declined assignment.
             var model = GetVolunteerProjects(
                 volunteer.Vid,
                 volunteer.Mid,
@@ -353,16 +318,11 @@ namespace VolunteerHub.Controllers
                 model
             );
         }
-
-        // ==========================================
-        // GET PROJECTS FOR A VOLUNTEER CATEGORY
-        // ==========================================
         private List<VolunteerProjectViewModel> GetVolunteerProjects(
             int volunteerId,
             int managerId,
             string projectStatus)
         {
-            // Recognize alternative status spellings.
             string[] allowedProjectStatuses =
                 projectStatus.ToUpperInvariant() switch
                 {
@@ -388,11 +348,6 @@ namespace VolunteerHub.Controllers
                         projectStatus.ToUpperInvariant()
                     }
                 };
-
-            // Ongoing projects require an accepted or assigned
-            // volunteer. Completed projects can also have a
-            // COMPLETED assignment status. Canceled projects include
-            // pending applications and non-declined assignments.
             string[] allowedAssignmentStatuses =
                 projectStatus.ToUpperInvariant() switch
                 {
@@ -452,9 +407,6 @@ namespace VolunteerHub.Controllers
                 .ToList();
         }
 
-        // ==========================================
-        // VIEW PROJECT DETAILS
-        // ==========================================
         [HttpGet]
         public IActionResult Details(int id)
         {
@@ -533,9 +485,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================
-        // HELPER METHODS
-        // ==========================================
         private void SetVolunteerInformation(
             Person person,
             Volunteer volunteer)

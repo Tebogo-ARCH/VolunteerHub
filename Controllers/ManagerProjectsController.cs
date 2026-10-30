@@ -4,7 +4,6 @@ using VolunteerHub.Models;
 
 namespace VolunteerHub.Controllers
 {
-    // Handles project management for the logged-in manager.
     public class ManagerProjectsController : Controller
     {
         private readonly VolunteerHubContext _context;
@@ -13,10 +12,6 @@ namespace VolunteerHub.Controllers
         {
             _context = context;
         }
-
-        // ==========================================================
-        // PROJECT LIST
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Index()
@@ -60,9 +55,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================================
-        // PROJECT DETAILS
-        // ==========================================================
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
@@ -100,14 +92,12 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // Count requests awaiting the manager's decision.
             ViewBag.RequestedVolunteersCount =
                 await _context.ProjectAssignments.CountAsync(pa =>
                     pa.ProjectId == id &&
                     pa.Status != null &&
                     pa.Status.ToUpper() == "PENDING");
 
-            // Count accepted volunteer requests.
             ViewBag.AcceptedVolunteersCount =
                 await _context.ProjectAssignments.CountAsync(pa =>
                     pa.ProjectId == id &&
@@ -125,9 +115,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================================
-        // CREATE PROJECT - GET
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Create()
@@ -165,9 +152,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================================
-        // CREATE PROJECT - POST
-        // ==========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -201,7 +185,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Index", "Manager");
             }
 
-            // Validate project name.
             if (string.IsNullOrWhiteSpace(projectName))
             {
                 ModelState.AddModelError(
@@ -210,7 +193,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // Validate project location.
             if (string.IsNullOrWhiteSpace(location))
             {
                 ModelState.AddModelError(
@@ -219,7 +201,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // Validate project dates.
             if (endDate.HasValue && endDate.Value < startDate)
             {
                 ModelState.AddModelError(
@@ -257,9 +238,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ==========================================================
-        // ACTIVATE PROJECT - POST
-        // ==========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -288,7 +266,6 @@ namespace VolunteerHub.Controllers
                 return Forbid();
             }
 
-            // Only allow this manager to activate their own project.
             var project = _context.Projects
                 .FirstOrDefault(p =>
                     p.ProjectId == id &&
@@ -299,7 +276,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // Only projects in PLANNING status can be activated.
             if (!string.Equals(
                     project.Status,
                     "PLANNING",
@@ -320,9 +296,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        // ==========================================================
-        // CANCEL PROJECT - POST
-        // ==========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -351,7 +324,6 @@ namespace VolunteerHub.Controllers
                 return Forbid();
             }
 
-            // Only allow this manager to cancel their own project.
             var project = _context.Projects
                 .FirstOrDefault(p =>
                     p.ProjectId == id &&
@@ -364,7 +336,6 @@ namespace VolunteerHub.Controllers
 
             var currentStatus = project.Status?.ToUpperInvariant();
 
-            // Only PLANNING or ACTIVE projects can be cancelled.
             if (currentStatus != "PLANNING" &&
                 currentStatus != "ACTIVE")
             {
@@ -383,9 +354,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        // ==========================================================
-        // PROJECT COMPLETION / REVIEW - GET
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Completion(int id)
@@ -423,7 +391,6 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // Get all assignments except declined requests.
             var assignments = _context.ProjectAssignments
                 .Include(pa => pa.VidNavigation)
                     .ThenInclude(v => v.PidNavigation)
@@ -436,7 +403,6 @@ namespace VolunteerHub.Controllers
                 .ThenBy(pa => pa.VidNavigation.PidNavigation.LastName)
                 .ToList();
 
-            // Get attendance records for the selected project.
             var attendance = _context.Attendances
                 .Where(a => a.ProjectId == id)
                 .ToList();
@@ -502,8 +468,6 @@ namespace VolunteerHub.Controllers
                 );
             }
 
-            // A project needs at least one assignment, and every
-            // included volunteer must satisfy the completion checks.
             bool projectReady = false;
 
             if (assignments.Any())
@@ -526,9 +490,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-        // ==========================================================
-        // MARK PROJECT COMPLETED - POST
-        // ==========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -567,14 +528,12 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-            // Get assignments that have not been declined.
             var assignments = _context.ProjectAssignments
                 .Where(pa =>
                     pa.ProjectId == id &&
                     pa.Status != "DECLINED")
                 .ToList();
 
-            // Require at least one assignment before completion.
             if (!assignments.Any())
             {
                 TempData["ErrorMessage"] =
@@ -640,7 +599,6 @@ namespace VolunteerHub.Controllers
                 }
             }
 
-            // Every completion requirement has been met.
             project.Status = "COMPLETED";
             _context.SaveChanges();
 
@@ -654,9 +612,6 @@ namespace VolunteerHub.Controllers
         }
     }
 
-    // ==============================================================
-    // MANAGER COMPLETION ROW
-    // ==============================================================
 
     public class ManagerCompletionRow
     {

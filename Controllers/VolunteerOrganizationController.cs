@@ -15,21 +15,12 @@ namespace VolunteerHub.Controllers
 
         public IActionResult Index()
         {
-            // ==========================================
-            // GET LOGGED-IN USERNAME
-            // ==========================================
-
             var username = HttpContext.Session.GetString("Username");
 
             if (string.IsNullOrEmpty(username))
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // ==========================================
-            // GET PERSON
-            // ==========================================
 
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
@@ -39,11 +30,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-
-            // ==========================================
-            // GET VOLUNTEER
-            // ==========================================
-
             var volunteer = _context.Volunteers
                 .FirstOrDefault(v => v.Pid == person.Pid);
 
@@ -51,11 +37,6 @@ namespace VolunteerHub.Controllers
             {
                 return Forbid();
             }
-
-
-            // ==========================================
-            // GET ORGANIZATION
-            // ==========================================
 
             var organization = _context.Organizations
                 .Include(o => o.Address)
@@ -65,11 +46,6 @@ namespace VolunteerHub.Controllers
             {
                 return NotFound("Organization not found.");
             }
-
-
-            // ==========================================
-            // OPEN VOLUNTEER ORGANIZATION VIEW
-            // ==========================================
 
             return View(
                 "~/Views/Volunteer/Organization/Index.cshtml",

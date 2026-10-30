@@ -13,15 +13,9 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // VIEW ORGANIZATION
-        // ==========================================
 
         public IActionResult Index()
         {
-            // ==========================================
-            // GET LOGGED-IN USER
-            // ==========================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -30,10 +24,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ==========================================
-            // FIND PERSON
-            // ==========================================
-
             var person = _context.Persons
                 .FirstOrDefault(p => p.UserName == username);
 
@@ -41,11 +31,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-            // ==========================================
-            // FIND STAFF
-            // ==========================================
-
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
 
@@ -53,10 +38,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-            // ==========================================
-            // FIND ORGANIZATION
-            // ==========================================
 
             var organization = _context.Organizations
                 .Include(o => o.Address)
@@ -68,19 +49,10 @@ namespace VolunteerHub.Controllers
             {
                 return NotFound();
             }
-
-            // ==========================================
-            // STAFF INFORMATION
-            // ==========================================
-
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
             ViewBag.UserName = person.UserName;
             ViewBag.Sid = staff.Sid;
-
-            // ==========================================
-            // RETURN ORGANIZATION PAGE
-            // ==========================================
 
             return View(
                 "~/Views/Staff/Organization/Index.cshtml",

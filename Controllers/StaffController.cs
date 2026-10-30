@@ -13,15 +13,8 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // STAFF DASHBOARD
-        // ==========================================
-
         public IActionResult Index()
         {
-            // ==========================================
-            // GET LOGGED-IN USER
-            // ==========================================
 
             var username = HttpContext.Session.GetString("Username");
 
@@ -30,9 +23,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ==========================================
-            // FIND PERSON
-            // ==========================================
 
             var person = _context.Persons
                 .Include(p => p.Staff)
@@ -43,9 +33,6 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ==========================================
-            // FIND STAFF
-            // ==========================================
 
             var staff = _context.Staff
                 .FirstOrDefault(s => s.Pid == person.Pid);
@@ -55,45 +42,25 @@ namespace VolunteerHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // ==========================================
-            // GET ORGANIZATION
-            // ==========================================
-
             var organization = _context.Organizations
                 .Include(o => o.Address)
                 .FirstOrDefault(o => o.Mid == staff.Mid);
 
-            // ==========================================
-            // GET STAFF PROJECTS
-            // ==========================================
 
             var projectCount = _context.Projects
                 .Count(p => p.Mid == staff.Mid);
 
-            // ==========================================
-            // GET VOLUNTEER COUNT
-            // ==========================================
 
             var volunteerCount = _context.Volunteers
                 .Count(v => v.Mid == staff.Mid);
 
-            // ==========================================
-            // GET ATTENDANCE COUNT
-            // ==========================================
-
             var attendanceCount = _context.Attendances
                 .Count(a => a.Sid == staff.Sid);
 
-            // ==========================================
-            // GET REPORT COUNT
-            // ==========================================
 
             var reportCount = _context.Reports
                 .Count(r => r.Mid == staff.Mid);
 
-            // ==========================================
-            // VIEW BAG INFORMATION
-            // ==========================================
 
             ViewBag.FirstName = person.FirstName;
             ViewBag.LastName = person.LastName;
@@ -109,9 +76,6 @@ namespace VolunteerHub.Controllers
             ViewBag.AttendanceCount = attendanceCount;
             ViewBag.ReportCount = reportCount;
 
-            // ==========================================
-            // RETURN DASHBOARD
-            // ==========================================
 
             return View(
                 "~/Views/Staff/Index.cshtml"

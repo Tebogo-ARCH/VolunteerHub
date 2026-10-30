@@ -22,7 +22,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // Finds the logged-in volunteer and their organization.
         private (
             Person? Person,
             Volunteer? Volunteer,
@@ -58,8 +57,6 @@ namespace VolunteerHub.Controllers
             return (person, volunteer, organization);
         }
 
-        // GET: VolunteerCommunication
-        // Shows announcements for the volunteer's organization.
         [HttpGet]
         public IActionResult Index()
         {
@@ -96,8 +93,6 @@ namespace VolunteerHub.Controllers
             return View(IndexView, announcements);
         }
 
-        // GET: VolunteerCommunication/Details/5
-        // Only shows an announcement belonging to the volunteer's organization.
         [HttpGet]
         public IActionResult Details(int id)
         {

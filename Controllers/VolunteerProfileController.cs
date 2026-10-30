@@ -13,10 +13,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // ==========================================================
-        // GET PROFILE
-        // ==========================================================
-
         [HttpGet]
         public IActionResult Index()
         {
@@ -53,11 +49,6 @@ namespace VolunteerHub.Controllers
                 volunteer
             );
         }
-
-
-        // ==========================================================
-        // EDIT PROFILE - GET
-        // ==========================================================
 
         [HttpGet]
         public IActionResult Edit()
@@ -100,11 +91,6 @@ namespace VolunteerHub.Controllers
             );
         }
 
-
-        // ==========================================================
-        // EDIT PROFILE - POST
-        // ==========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(
@@ -120,22 +106,12 @@ namespace VolunteerHub.Controllers
             string postalCode,
             List<int>? selectedSkillIds)
         {
-            // ======================================================
-            // CHECK LOGIN
-            // ======================================================
-
             var username = HttpContext.Session.GetString("Username");
 
             if (string.IsNullOrEmpty(username))
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // ======================================================
-            // FIND LOGGED-IN PERSON
-            // ======================================================
-
             var person = _context.Persons
                 .Include(p => p.Address)
                 .FirstOrDefault(p => p.UserName == username);
@@ -144,11 +120,6 @@ namespace VolunteerHub.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
-
-            // ======================================================
-            // FIND LOGGED-IN VOLUNTEER
-            // ======================================================
 
             var volunteer = _context.Volunteers
                 .Include(v => v.PidNavigation)
@@ -161,20 +132,11 @@ namespace VolunteerHub.Controllers
                 return NotFound();
             }
 
-
-            // ======================================================
-            // UPDATE PERSONAL INFORMATION
-            // ======================================================
-
             volunteer.PidNavigation.FirstName = firstName;
             volunteer.PidNavigation.LastName = lastName;
             volunteer.PidNavigation.Email = email;
             volunteer.PidNavigation.Phone = phone;
 
-
-            // ======================================================
-            // UPDATE ADDRESS
-            // ======================================================
 
             if (volunteer.PidNavigation.Address == null)
             {
@@ -187,21 +149,11 @@ namespace VolunteerHub.Controllers
             volunteer.PidNavigation.Address.Province = province;
             volunteer.PidNavigation.Address.PostalCode = postalCode;
 
-
-            // ======================================================
-            // REMOVE OLD SKILLS
-            // ======================================================
-
             var oldSkills = _context.VolunteerSkills
                 .Where(vs => vs.Vid == volunteer.Vid)
                 .ToList();
 
             _context.VolunteerSkills.RemoveRange(oldSkills);
-
-
-            // ======================================================
-            // ADD NEW SKILLS
-            // ======================================================
 
             selectedSkillIds ??= new List<int>();
 
@@ -224,17 +176,7 @@ namespace VolunteerHub.Controllers
                 _context.VolunteerSkills.Add(volunteerSkill);
             }
 
-
-            // ======================================================
-            // SAVE
-            // ======================================================
-
             _context.SaveChanges();
-
-
-            // ======================================================
-            // RETURN TO PROFILE
-            // ======================================================
 
             return RedirectToAction("Index");
         }
