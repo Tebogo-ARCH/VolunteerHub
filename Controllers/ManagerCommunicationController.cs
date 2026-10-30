@@ -12,7 +12,6 @@ namespace VolunteerHub.Controllers
     {
         private readonly VolunteerHubContext _context;
 
-        // Explicit paths for views stored under Views/Manager.
         private const string IndexView =
             "~/Views/Manager/ManagerCommunication/Index.cshtml";
 
@@ -28,8 +27,6 @@ namespace VolunteerHub.Controllers
             _context = context;
         }
 
-        // Retrieves the logged-in manager, their person record,
-        // and their assigned organization.
         private (
             Person? Person,
             Manager? Manager,
@@ -66,8 +63,6 @@ namespace VolunteerHub.Controllers
             return (person, manager, organization);
         }
 
-        // GET: ManagerCommunication
-        // Displays announcements belonging to the logged-in manager.
         [HttpGet]
         public IActionResult Index()
         {
@@ -106,8 +101,6 @@ namespace VolunteerHub.Controllers
             return View(IndexView, announcements);
         }
 
-        // GET: ManagerCommunication/Create
-        // Displays the form for creating an announcement.
         [HttpGet]
         public IActionResult Create()
         {
@@ -137,8 +130,6 @@ namespace VolunteerHub.Controllers
             return View(CreateView);
         }
 
-        // POST: ManagerCommunication/Create
-        // Saves the announcement for the manager's organization.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(string title, string content)
@@ -213,9 +204,6 @@ namespace VolunteerHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: ManagerCommunication/Details/5
-        // Displays an announcement belonging to this manager
-        // and their assigned organization.
         [HttpGet]
         public IActionResult Details(int id)
         {
